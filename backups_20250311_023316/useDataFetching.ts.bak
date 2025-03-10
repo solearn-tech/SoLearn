@@ -1,0 +1,298 @@
+import { useQuery, useMutation, useQueryClient, UseQueryOptions, UseMutationOptions } from 'react-query';
+import axios, { AxiosError } from 'axios';
+import { useAppContext } from '../store/AppContext';
+
+// Chinese comment replaced with English comment
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.solearn.dev';
+
+// Chinese comment replaced with English comment
+export interface ApiError {
+  statusCode: number;
+  message: string;
+  errors?: Record<string, string[]>;
+}
+
+// Chinese comment replaced with English comment
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Chinese comment replaced with English comment
+apiClient.interceptors.request.use(
+  (config) => {
+    // Chinese comment replaced with English comment
+    const token = localStorage.getItem('auth_token');
+    
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Chinese comment replaced with English comment
+async function fetchData<T>(url: string, params?: Record<string, any>): Promise<T> {
+  const response = await apiClient.get<T>(url, { params });
+  return response.data;
+}
+
+// Chinese comment replaced with English comment
+async function mutateData<T, D>(url: string, data: D, method: 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'POST'): Promise<T> {
+  let response;
+  
+  switch (method) {
+    case 'POST':
+      response = await apiClient.post<T>(url, data);
+      break;
+    case 'PUT':
+      response = await apiClient.put<T>(url, data);
+      break;
+    case 'PATCH':
+      response = await apiClient.patch<T>(url, data);
+      break;
+    case 'DELETE':
+      response = await apiClient.delete<T>(url, { data });
+      break;
+  }
+  
+  return response.data;
+}
+
+/**
+ * 使用React Query获取数据的通用Hook
+ * @param queryKey 查询键，用于缓存
+ * @param url API端点
+ * @param params 查询参数
+ * @param options React Query选项
+ */
+export function useDataFetching<T>(
+  queryKey: string | (string | object)[],
+  url: string,
+  params?: Record<string, any>,
+  options?: UseQueryOptions<T, AxiosError<ApiError>>
+) {
+  const { setError } = useAppContext();
+  
+  return useQuery<T, AxiosError<ApiError>>(
+    queryKey,
+    () => fetchData<T>(url, params),
+    {
+      onError: (error) => {
+        const errorMessage = error.response?.data?.message || error.message;
+        setError(errorMessage);
+      },
+      ...options,
+    }
+  );
+}
+
+/**
+ * 使用React Query修改数据的通用Hook
+ * @param mutationKey 修改键，用于缓存失效
+ * @param url API端点
+ * @param method HTTP方法
+ * @param options React Query选项
+ */
+export function useDataMutation<T, D>(
+  mutationKey: string,
+  url: string,
+  method: 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'POST',
+  options?: UseMutationOptions<T, AxiosError<ApiError>, D>
+) {
+  const { setError } = useAppContext();
+  const queryClient = useQueryClient();
+  
+  return useMutation<T, AxiosError<ApiError>, D>(
+    (data: D) => mutateData<T, D>(url, data, method),
+    {
+      onError: (error) => {
+        const errorMessage = error.response?.data?.message || error.message;
+        setError(errorMessage);
+      },
+      onSettled: () => {
+        // Chinese comment replaced with English comment
+        queryClient.invalidateQueries(mutationKey);
+      },
+      ...options,
+    }
+  );
+}
+
+/**
+ * 获取User数据的Hook
+ * @param userId UserID
+ * @param options React Query选项
+ */
+export function useUser(userId: string, options?: UseQueryOptions) {
+  return useDataFetching(
+    ['user', userId],
+    `/users/${userId}`,
+    undefined,
+    {
+      staleTime: 5 * 60 * 1000, // Chinese comment replaced with English comment
+      ...options,
+    }
+  );
+}
+
+/**
+ * 获取CourseList的Hook
+ * @param filters 过滤条件
+ * @param options React Query选项
+ */
+export function useCourses(filters?: Record<string, any>, options?: UseQueryOptions) {
+  return useDataFetching(
+    ['courses', { ...filters }],
+    '/courses',
+    filters,
+    {
+      staleTime: 60 * 1000, // Chinese comment replaced with English comment
+      ...options,
+    }
+  );
+}
+
+/**
+ * 获取单个CourseDetails的Hook
+ * @param courseId CourseID
+ * @param options React Query选项
+ */
+export function useCourse(courseId: string, options?: UseQueryOptions) {
+  return useDataFetching(
+    ['course', courseId],
+    `/courses/${courseId}`,
+    undefined,
+    {
+      staleTime: 5 * 60 * 1000, // Chinese comment replaced with English comment
+      ...options,
+    }
+  );
+}
+
+/**
+ * 获取Course评价的Hook
+ * @param courseId CourseID
+ * @param options React Query选项
+ */
+export function useCourseReviews(courseId: string, options?: UseQueryOptions) {
+  return useDataFetching(
+    ['courseReviews', courseId],
+    `/courses/${courseId}/reviews`,
+    undefined,
+    options
+  );
+}
+
+/**
+ * SubmitCourse评价的Hook
+ */
+export function useSubmitReview() {
+  return useDataMutation<any, { courseId: string; rating: number; text: string }>(
+    'courseReviews',
+    '/reviews',
+    'POST'
+  );
+}
+
+/**
+ * 获取UserAchievement的Hook
+ * @param userId UserID
+ * @param options React Query选项
+ */
+export function useUserAchievements(userId: string, options?: UseQueryOptions) {
+  return useDataFetching(
+    ['userAchievements', userId],
+    `/users/${userId}/achievements`,
+    undefined,
+    options
+  );
+}
+
+/**
+ * 获取排行榜的Hook
+ * @param type 排行榜类型
+ * @param period 时间周期
+ * @param options React Query选项
+ */
+export function useLeaderboard(
+  type: 'xp' | 'courses' | 'tokens',
+  period: 'weekly' | 'monthly' | 'allTime',
+  options?: UseQueryOptions
+) {
+  return useDataFetching(
+    ['leaderboard', type, period],
+    '/leaderboard',
+    { type, period },
+    options
+  );
+}
+
+/**
+ * 获取UserNotification的Hook
+ * @param options React Query选项
+ */
+export function useNotifications(options?: UseQueryOptions) {
+  return useDataFetching(['notifications'], '/notifications', undefined, options);
+}
+
+/**
+ * 将Notification标记为已读的Hook
+ */
+export function useMarkNotificationRead() {
+  return useDataMutation<any, { notificationId: string }>(
+    'notifications',
+    '/notifications/mark-read',
+    'POST'
+  );
+}
+
+/**
+ * 获取User钱包余额的Hook
+ * @param walletAddress 钱包地址
+ * @param options React Query选项
+ */
+export function useWalletBalance(walletAddress: string, options?: UseQueryOptions) {
+  return useDataFetching(
+    ['walletBalance', walletAddress],
+    `/wallet/${walletAddress}/balance`,
+    undefined,
+    {
+      // Chinese comment replaced with English comment
+      staleTime: 30 * 1000, // Chinese comment replaced with English comment
+      refetchInterval: 60 * 1000, // Chinese comment replaced with English comment
+      ...options,
+    }
+  );
+}
+
+/**
+ * CourseRegisterHook
+ */
+export function useCourseEnrollment() {
+  return useDataMutation<any, { courseId: string }>(
+    'enrollments',
+    '/enrollments',
+    'POST'
+  );
+}
+
+export default {
+  useDataFetching,
+  useDataMutation,
+  useUser,
+  useCourses,
+  useCourse,
+  useCourseReviews,
+  useSubmitReview,
+  useUserAchievements,
+  useLeaderboard,
+  useNotifications,
+  useMarkNotificationRead,
+  useWalletBalance,
+  useCourseEnrollment
+}; 

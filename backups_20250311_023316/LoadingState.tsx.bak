@@ -1,0 +1,146 @@
+import React from 'react';
+
+type LoadingSize = 'small' | 'medium' | 'large';
+type LoadingVariant = 'circle' | 'dots' | 'skeleton';
+type LoadingColor = 'primary' | 'secondary' | 'gray' | 'white';
+
+interface LoadingStateProps {
+  size?: LoadingSize;
+  variant?: LoadingVariant;
+  color?: LoadingColor;
+  text?: string;
+  fullscreen?: boolean;
+  transparent?: boolean;
+  className?: string;
+  textClassName?: string;
+}
+
+/**
+ * 通用Loading状态组件
+ * 支持不同的大小、变体和颜色
+ */
+const LoadingState: React.FC<LoadingStateProps> = ({
+  size = 'medium',
+  variant = 'circle',
+  color = 'primary',
+  text,
+  fullscreen = false,
+  transparent = false,
+  className = '',
+  textClassName = ''
+}) => {
+  // Chinese comment replaced with English comment
+  const getSizeClasses = () => {
+    switch (size) {
+      case 'small':
+        return 'h-5 w-5';
+      case 'large':
+        return 'h-12 w-12';
+      case 'medium':
+      default:
+        return 'h-8 w-8';
+    }
+  };
+
+  // Chinese comment replaced with English comment
+  const getColorClasses = () => {
+    switch (color) {
+      case 'secondary':
+        return 'border-secondary-600 dark:border-secondary-400 text-secondary-600 dark:text-secondary-400 fill-secondary-600 dark:fill-secondary-400';
+      case 'gray':
+        return 'border-gray-400 dark:border-gray-500 text-gray-600 dark:text-gray-400 fill-gray-600 dark:fill-gray-400';
+      case 'white':
+        return 'border-white dark:border-gray-300 text-white dark:text-gray-300 fill-white dark:fill-gray-300';
+      case 'primary':
+      default:
+        return 'border-primary-600 dark:border-primary-400 text-primary-600 dark:text-primary-400 fill-primary-600 dark:fill-primary-400';
+    }
+  };
+
+  // Chinese comment replaced with English comment
+  const renderLoader = () => {
+    const sizeClass = getSizeClasses();
+    const colorClass = getColorClasses();
+
+    switch (variant) {
+      case 'dots':
+        return (
+          <div className={`flex items-center space-x-1 ${className}`}>
+            <div className={`animate-bounce ${sizeClass.split(' ')[0]} h-2 w-2 rounded-full ${colorClass.split(' ')[2]}`} style={{ animationDelay: '0ms' }}></div>
+            <div className={`animate-bounce ${sizeClass.split(' ')[0]} h-2 w-2 rounded-full ${colorClass.split(' ')[2]}`} style={{ animationDelay: '150ms' }}></div>
+            <div className={`animate-bounce ${sizeClass.split(' ')[0]} h-2 w-2 rounded-full ${colorClass.split(' ')[2]}`} style={{ animationDelay: '300ms' }}></div>
+          </div>
+        );
+      case 'skeleton':
+        return (
+          <div className={`animate-pulse rounded-md bg-gray-200 dark:bg-gray-700 ${sizeClass} ${className}`}></div>
+        );
+      case 'circle':
+      default:
+        return (
+          <div className={`animate-spin rounded-full border-t-2 border-b-2 ${sizeClass} ${colorClass.split(' ')[0]} ${className}`}></div>
+        );
+    }
+  };
+
+  // Chinese comment replaced with English comment
+  if (fullscreen) {
+    return (
+      <div className={`fixed inset-0 flex items-center justify-center z-50 ${transparent ? 'bg-opacity-50' : 'bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-90'}`}>
+        <div className="flex flex-col items-center">
+          {renderLoader()}
+          {text && (
+            <p className={`mt-4 text-gray-600 dark:text-gray-300 ${textClassName}`}>
+              {text}
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Chinese comment replaced with English comment
+  return (
+    <div className="flex items-center">
+      {renderLoader()}
+      {text && (
+        <p className={`ml-3 text-gray-600 dark:text-gray-300 ${textClassName}`}>
+          {text}
+        </p>
+      )}
+    </div>
+  );
+};
+
+/**
+ * 骨架屏组件，用于显示ContentLoading时的占位符
+ */
+export const Skeleton: React.FC<{
+  className?: string;
+  height?: number | string;
+  width?: number | string;
+  rounded?: boolean;
+  circle?: boolean;
+}> = ({ 
+  className = '', 
+  height, 
+  width, 
+  rounded = false, 
+  circle = false 
+}) => {
+  const style: React.CSSProperties = {};
+  
+  if (height) style.height = typeof height === 'number' ? `${height}px` : height;
+  if (width) style.width = typeof width === 'number' ? `${width}px` : width;
+
+  return (
+    <div 
+      className={`animate-pulse bg-gray-200 dark:bg-gray-700 ${
+        circle ? 'rounded-full' : rounded ? 'rounded-md' : ''
+      } ${className}`}
+      style={style}
+    />
+  );
+};
+
+export default LoadingState; 

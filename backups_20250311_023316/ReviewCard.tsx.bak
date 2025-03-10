@@ -1,0 +1,280 @@
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { FiStar, FiThumbsUp, FiThumbsDown, FiFlag, FiMoreHorizontal, FiUser } from 'react-icons/fi';
+
+// Chinese comment replaced with English comment
+export interface ReviewCardProps {
+  id: string;
+  author: {
+    id: string;
+    name: string;
+    avatar?: string;
+    level?: number;
+  };
+  rating: number;      // Chinese comment replaced with English comment
+  text: string;
+  date: Date;
+  isVerifiedPurchase: boolean;
+  helpfulCount: number;
+  unhelpfulCount: number;
+  courseId: string;
+  courseName?: string;
+  isUserReview?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onReply?: () => void;
+}
+
+// Chinese comment replaced with English comment
+const ReviewCard: React.FC<ReviewCardProps> = ({
+  id,
+  author,
+  rating,
+  text,
+  date,
+  isVerifiedPurchase,
+  helpfulCount,
+  unhelpfulCount,
+  courseId,
+  courseName,
+  isUserReview = false,
+  onEdit,
+  onDelete,
+  onReply
+}) => {
+  const [isHelpful, setIsHelpful] = useState<boolean | null>(null);
+  const [helpfulVotes, setHelpfulVotes] = useState(helpfulCount);
+  const [unhelpfulVotes, setUnhelpfulVotes] = useState(unhelpfulCount);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Chinese comment replaced with English comment
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  // Chinese comment replaced with English comment
+  const handleHelpfulVote = () => {
+    if (isHelpful === true) {
+      // Chinese comment replaced with English comment
+      setIsHelpful(null);
+      setHelpfulVotes(helpfulVotes - 1);
+    } else {
+      // Chinese comment replaced with English comment
+      if (isHelpful === false) {
+        // Chinese comment replaced with English comment
+        setUnhelpfulVotes(unhelpfulVotes - 1);
+      }
+      setIsHelpful(true);
+      setHelpfulVotes(helpfulVotes + 1);
+    }
+  };
+
+  // Chinese comment replaced with English comment
+  const handleUnhelpfulVote = () => {
+    if (isHelpful === false) {
+      // Chinese comment replaced with English comment
+      setIsHelpful(null);
+      setUnhelpfulVotes(unhelpfulVotes - 1);
+    } else {
+      // Chinese comment replaced with English comment
+      if (isHelpful === true) {
+        // Chinese comment replaced with English comment
+        setHelpfulVotes(helpfulVotes - 1);
+      }
+      setIsHelpful(false);
+      setUnhelpfulVotes(unhelpfulVotes + 1);
+    }
+  };
+
+  // Chinese comment replaced with English comment
+  const handleReport = () => {
+    // Chinese comment replaced with English comment
+    alert('Report已Submit，我们会尽快处理。');
+    setIsMenuOpen(false);
+  };
+
+  // Chinese comment replaced with English comment
+  const renderStars = (rating: number) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <FiStar
+          key={i}
+          className={`w-5 h-5 ${
+            i <= rating
+              ? 'text-yellow-400 fill-current'
+              : 'text-gray-300 dark:text-gray-600'
+          }`}
+        />
+      );
+    }
+    return <div className="flex">{stars}</div>;
+  };
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+      {/* 评价头部 */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-start">
+          {/* User头像 */}
+          <div className="mr-3">
+            {author.avatar ? (
+              <Image
+                src={author.avatar}
+                alt={author.name}
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                <FiUser className="text-gray-500 dark:text-gray-400" />
+              </div>
+            )}
+          </div>
+          
+          {/* UserInformation和评分 */}
+          <div>
+            <div className="flex items-center">
+              <h3 className="font-medium text-gray-900 dark:text-white mr-2">
+                {author.name}
+              </h3>
+              {author.level && (
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  Lv.{author.level}
+                </span>
+              )}
+              {isUserReview && (
+                <span className="ml-2 inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-400">
+                  你的评价
+                </span>
+              )}
+            </div>
+            <div className="flex items-center mt-1">
+              {renderStars(rating)}
+              <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                {formatDate(date)}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        {/* 操作菜单 */}
+        <div className="relative">
+          <button
+            className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <FiMoreHorizontal />
+          </button>
+          
+          {isMenuOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-700">
+              {isUserReview ? (
+                <>
+                  {onEdit && (
+                    <button
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => {
+                        onEdit();
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      Edit评价
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      onClick={() => {
+                        onDelete();
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      Delete评价
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
+                  {onReply && (
+                    <button
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => {
+                        onReply();
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      Reply评价
+                    </button>
+                  )}
+                  <button
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={handleReport}
+                  >
+                    <FiFlag className="inline-block mr-2" size={14} />
+                    Report评价
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Course名称（如果有） */}
+      {courseName && (
+        <div className="mb-3 text-sm text-primary-600 dark:text-primary-400">
+          评价了 <a href={`/courses/${courseId}`} className="hover:underline">{courseName}</a>
+        </div>
+      )}
+      
+      {/* 已验证购买标签 */}
+      {isVerifiedPurchase && (
+        <div className="mb-3">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
+            已验证购买
+          </span>
+        </div>
+      )}
+      
+      {/* 评价Content */}
+      <div className="text-gray-700 dark:text-gray-300 mb-4 whitespace-pre-line">
+        {text}
+      </div>
+      
+      {/* 有用/无用按钮 */}
+      <div className="flex items-center space-x-4">
+        <button
+          className={`flex items-center text-sm ${
+            isHelpful === true
+              ? 'text-primary-600 dark:text-primary-400'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+          }`}
+          onClick={handleHelpfulVote}
+        >
+          <FiThumbsUp className={`mr-1 ${isHelpful === true ? 'fill-current' : ''}`} />
+          <span>有用 ({helpfulVotes})</span>
+        </button>
+        
+        <button
+          className={`flex items-center text-sm ${
+            isHelpful === false
+              ? 'text-red-600 dark:text-red-400'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+          }`}
+          onClick={handleUnhelpfulVote}
+        >
+          <FiThumbsDown className={`mr-1 ${isHelpful === false ? 'fill-current' : ''}`} />
+          <span>无用 ({unhelpfulVotes})</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ReviewCard; 

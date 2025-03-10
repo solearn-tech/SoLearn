@@ -1,0 +1,187 @@
+import {
+  formatDate,
+  formatDateTime,
+  formatRelativeTime,
+  formatDuration,
+  formatNumber,
+  formatTokenAmount,
+  truncateString,
+  truncateMiddle,
+  shortenAddress,
+  generateId,
+  chunk,
+  groupBy,
+  getQueryParams,
+  buildQueryString,
+  formatFileSize
+} from './helpers';
+
+// Chinese comment replaced with English comment
+const originalDateNow = Date.now;
+
+beforeAll(() => {
+  // Chinese comment replaced with English comment
+  const mockNow = new Date(2023, 4, 15, 10, 0, 0).getTime();
+  global.Date.now = jest.fn(() => mockNow);
+});
+
+afterAll(() => {
+  global.Date.now = originalDateNow;
+});
+
+describe('日期格式化函数', () => {
+  test('formatDate 应正确格式化日期', () => {
+    const date = new Date(2023, 0, 15); // Chinese comment replaced with English comment
+    expect(formatDate(date)).toBe('2023年1月15日');
+  });
+
+  test('formatDateTime 应包含时间Information', () => {
+    const date = new Date(2023, 0, 15, 14, 30); // Chinese comment replaced with English comment
+    expect(formatDateTime(date)).toContain('2023年1月15日');
+    expect(formatDateTime(date)).toContain('14:30');
+  });
+
+  test('formatRelativeTime 应正确计算相对时间', () => {
+    // Chinese comment replaced with English comment
+    const tenSecondsAgo = new Date(2023, 4, 15, 9, 59, 50);
+    expect(formatRelativeTime(tenSecondsAgo)).toBe('10seconds ago');
+
+    // Chinese comment replaced with English comment
+    const fiveMinutesAgo = new Date(2023, 4, 15, 9, 55, 0);
+    expect(formatRelativeTime(fiveMinutesAgo)).toBe('5minutes ago');
+
+    // Chinese comment replaced with English comment
+    const twoHoursAgo = new Date(2023, 4, 15, 8, 0, 0);
+    expect(formatRelativeTime(twoHoursAgo)).toBe('2hours ago');
+
+    // Chinese comment replaced with English comment
+    const threeDaysAgo = new Date(2023, 4, 12, 10, 0, 0);
+    expect(formatRelativeTime(threeDaysAgo)).toBe('3days ago');
+
+    // Chinese comment replaced with English comment
+    const twoMonthsAgo = new Date(2023, 2, 15, 10, 0, 0);
+    expect(formatRelativeTime(twoMonthsAgo)).toBe('2months ago');
+
+    // Chinese comment replaced with English comment
+    const oneYearAgo = new Date(2022, 4, 15, 10, 0, 0);
+    expect(formatRelativeTime(oneYearAgo)).toBe('1years ago');
+  });
+});
+
+describe('数字格式化函数', () => {
+  test('formatDuration 应正确转换分钟为可读时间', () => {
+    expect(formatDuration(30)).toBe('30分钟');
+    expect(formatDuration(60)).toBe('1小时');
+    expect(formatDuration(90)).toBe('1小时 30分钟');
+    expect(formatDuration(150)).toBe('2小时 30分钟');
+  });
+
+  test('formatNumber 应正确格式化数字', () => {
+    expect(formatNumber(1000)).toBe('1,000');
+    expect(formatNumber(1234567.89)).toBe('1,234,567.89');
+  });
+
+  test('formatTokenAmount 应展示适当的单位缩写', () => {
+    expect(formatTokenAmount(500)).toBe('500.00');
+    expect(formatTokenAmount(1500)).toBe('1.50K');
+    expect(formatTokenAmount(1500000)).toBe('1.50M');
+    expect(formatTokenAmount(1234, 1)).toBe('1.2K');
+  });
+
+  test('formatFileSize 应转换字节为可读大小', () => {
+    expect(formatFileSize(0)).toBe('0 Bytes');
+    expect(formatFileSize(1024)).toBe('1 KB');
+    expect(formatFileSize(1024 * 1024)).toBe('1 MB');
+    expect(formatFileSize(1024 * 1024 * 1024)).toBe('1 GB');
+    expect(formatFileSize(1024 * 1024 * 1024 * 1.5)).toBe('1.5 GB');
+  });
+});
+
+describe('字符串处理函数', () => {
+  test('truncateString 应正确缩短字符串', () => {
+    expect(truncateString('Hello World', 5)).toBe('Hello...');
+    expect(truncateString('Hello', 5)).toBe('Hello');
+    expect(truncateString('Hello', 10)).toBe('Hello');
+  });
+
+  test('truncateMiddle 应在中间截断文本', () => {
+    expect(truncateMiddle('0x1234567890abcdef', 4, 4)).toBe('0x12...cdef');
+    expect(truncateMiddle('short', 2, 2)).toBe('short');
+  });
+
+  test('shortenAddress 应缩短区块链地址', () => {
+    expect(shortenAddress('0x1234567890abcdef1234567890abcdef')).toBe('0x12...cdef');
+    expect(shortenAddress('0x1234567890abcdef1234567890abcdef', 2)).toBe('0x...ef');
+  });
+});
+
+describe('数组和对象处理函数', () => {
+  test('generateId 应生成指定长度的随机ID', () => {
+    const id = generateId();
+    expect(id.length).toBe(8);
+    
+    const id2 = generateId(10);
+    expect(id2.length).toBe(10);
+  });
+
+  test('chunk 应将数组分割为指定大小的块', () => {
+    const array = [1, 2, 3, 4, 5, 6, 7, 8];
+    expect(chunk(array, 3)).toEqual([[1, 2, 3], [4, 5, 6], [7, 8]]);
+    expect(chunk(array, 2)).toEqual([[1, 2], [3, 4], [5, 6], [7, 8]]);
+    expect(chunk([], 2)).toEqual([]);
+  });
+
+  test('groupBy 应按照指定的键分组数组项', () => {
+    const array = [
+      { id: 1, category: 'A' },
+      { id: 2, category: 'B' },
+      { id: 3, category: 'A' },
+      { id: 4, category: 'C' }
+    ];
+    
+    const result = groupBy(array, item => item.category);
+    
+    expect(result).toEqual({
+      A: [{ id: 1, category: 'A' }, { id: 3, category: 'A' }],
+      B: [{ id: 2, category: 'B' }],
+      C: [{ id: 4, category: 'C' }]
+    });
+  });
+});
+
+describe('URL处理函数', () => {
+  test('getQueryParams 应解析URL中的查询参数', () => {
+    const url = 'https://example.com/page?name=John&age=25&verified=true';
+    expect(getQueryParams(url)).toEqual({
+      name: 'John',
+      age: '25',
+      verified: 'true'
+    });
+    
+    // Chinese comment replaced with English comment
+    const urlWithEncoded = 'https://example.com/search?q=hello%20world&lang=zh-CN';
+    expect(getQueryParams(urlWithEncoded)).toEqual({
+      q: 'hello world',
+      lang: 'zh-CN'
+    });
+    
+    // Chinese comment replaced with English comment
+    expect(getQueryParams('https://example.com')).toEqual({});
+  });
+
+  test('buildQueryString 应构建URL查询字符串', () => {
+    const params = {
+      name: 'John',
+      age: 25,
+      verified: true
+    };
+    
+    expect(buildQueryString(params)).toBe('?name=John&age=25&verified=true');
+    
+    // Chinese comment replaced with English comment
+    expect(buildQueryString({})).toBe('');
+    
+    // Chinese comment replaced with English comment
+    expect(buildQueryString({ q: 'hello world' })).toBe('?q=hello%20world');
+  });
+}); 

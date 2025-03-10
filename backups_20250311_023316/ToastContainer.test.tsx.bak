@@ -1,0 +1,143 @@
+import React from 'react';
+import { render, screen, waitFor, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ToastProvider, useToast } from './Toast';
+
+// Chinese comment replaced with English comment
+const TestComponent = () => {
+  const { success, error, info, warning, removeToast, clearToasts } = useToast();
+
+  return (
+    <div>
+      <button onClick={() => success('Success提示')}>显示SuccessNotification</button>
+      <button onClick={() => error('Error提示')}>显示ErrorNotification</button>
+      <button onClick={() => info('Information提示', { title: 'Notification' })}>显示带Title的InformationNotification</button>
+      <button onClick={() => warning('Warning提示', { duration: 1000 })}>显示短时间WarningNotification</button>
+      <button onClick={() => clearToasts()}>清除所有Notification</button>
+    </div>
+  );
+};
+
+// Chinese comment replaced with English comment
+const renderWithToastProvider = (ui: React.ReactElement) => {
+  return render(<ToastProvider>{ui}</ToastProvider>);
+};
+
+describe('Toast组件', () => {
+  beforeEach(() => {
+    // Chinese comment replaced with English comment
+    document.body.innerHTML = '';
+  });
+
+  test('应显示SuccessNotification', async () => {
+    renderWithToastProvider(<TestComponent />);
+    userEvent.click(screen.getByText('显示SuccessNotification'));
+
+    // Chinese comment replaced with English comment
+    await waitFor(() => {
+      expect(screen.getByText('Success提示')).toBeInTheDocument();
+    });
+
+    // Chinese comment replaced with English comment
+    const toastElement = screen.getByText('Success提示').closest('[role="alert"]');
+    expect(toastElement).toHaveClass('bg-green-50');
+  });
+
+  test('应显示ErrorNotification', async () => {
+    renderWithToastProvider(<TestComponent />);
+    userEvent.click(screen.getByText('显示ErrorNotification'));
+
+    // Chinese comment replaced with English comment
+    await waitFor(() => {
+      expect(screen.getByText('Error提示')).toBeInTheDocument();
+    });
+
+    // Chinese comment replaced with English comment
+    const toastElement = screen.getByText('Error提示').closest('[role="alert"]');
+    expect(toastElement).toHaveClass('bg-red-50');
+  });
+
+  test('应显示带Title的Notification', async () => {
+    renderWithToastProvider(<TestComponent />);
+    userEvent.click(screen.getByText('显示带Title的InformationNotification'));
+
+    // Chinese comment replaced with English comment
+    await waitFor(() => {
+      expect(screen.getByText('Notification')).toBeInTheDocument();
+      expect(screen.getByText('Information提示')).toBeInTheDocument();
+    });
+  });
+
+  test('应按指定持续时间自动关闭Notification', async () => {
+    // Chinese comment replaced with English comment
+    jest.useFakeTimers();
+
+    renderWithToastProvider(<TestComponent />);
+    userEvent.click(screen.getByText('显示短时间WarningNotification'));
+
+    // Chinese comment replaced with English comment
+    await waitFor(() => {
+      expect(screen.getByText('Warning提示')).toBeInTheDocument();
+    });
+
+    // Chinese comment replaced with English comment
+    act(() => {
+      jest.advanceTimersByTime(1300); // Chinese comment replaced with English comment
+    });
+
+    // Chinese comment replaced with English comment
+    await waitFor(() => {
+      expect(screen.queryByText('Warning提示')).not.toBeInTheDocument();
+    });
+
+    // Chinese comment replaced with English comment
+    jest.useRealTimers();
+  });
+
+  test('应能手动关闭Notification', async () => {
+    renderWithToastProvider(<TestComponent />);
+    userEvent.click(screen.getByText('显示SuccessNotification'));
+
+    // Chinese comment replaced with English comment
+    await waitFor(() => {
+      expect(screen.getByText('Success提示')).toBeInTheDocument();
+    });
+
+    // Chinese comment replaced with English comment
+    const closeButton = document.querySelector('button[aria-label="关闭"]');
+    if (closeButton) {
+      userEvent.click(closeButton);
+    }
+
+    // Chinese comment replaced with English comment
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Success提示')).not.toBeInTheDocument();
+      },
+      { timeout: 500 }
+    );
+  });
+
+  test('应能清除所有Notification', async () => {
+    renderWithToastProvider(<TestComponent />);
+    
+    // Chinese comment replaced with English comment
+    userEvent.click(screen.getByText('显示SuccessNotification'));
+    userEvent.click(screen.getByText('显示ErrorNotification'));
+
+    // Chinese comment replaced with English comment
+    await waitFor(() => {
+      expect(screen.getByText('Success提示')).toBeInTheDocument();
+      expect(screen.getByText('Error提示')).toBeInTheDocument();
+    });
+
+    // Chinese comment replaced with English comment
+    userEvent.click(screen.getByText('清除所有Notification'));
+
+    // Chinese comment replaced with English comment
+    await waitFor(() => {
+      expect(screen.queryByText('Success提示')).not.toBeInTheDocument();
+      expect(screen.queryByText('Error提示')).not.toBeInTheDocument();
+    });
+  });
+}); 

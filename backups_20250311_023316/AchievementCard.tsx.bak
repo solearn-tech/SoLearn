@@ -1,0 +1,226 @@
+import React from 'react';
+import Image from 'next/image';
+import { FiLock, FiAward, FiCalendar, FiClock } from 'react-icons/fi';
+
+// Chinese comment replaced with English comment
+export type AchievementRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+
+// Chinese comment replaced with English comment
+export type AchievementStatus = 'locked' | 'in-progress' | 'completed';
+
+// Chinese comment replaced with English comment
+export interface AchievementCardProps {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  rarity: AchievementRarity;
+  progress?: number; // Chinese comment replaced with English comment
+  status: AchievementStatus;
+  earnedDate?: Date;
+  tokenReward: number;
+  xpReward: number;
+  requirements?: string[];
+  isNFT?: boolean;
+}
+
+// Chinese comment replaced with English comment
+const getRarityColor = (rarity: AchievementRarity) => {
+  switch (rarity) {
+    case 'common':
+      return 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
+    case 'uncommon':
+      return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400';
+    case 'rare':
+      return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400';
+    case 'epic':
+      return 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400';
+    case 'legendary':
+      return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400';
+    default:
+      return 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
+  }
+};
+
+// Chinese comment replaced with English comment
+const getRarityName = (rarity: AchievementRarity) => {
+  switch (rarity) {
+    case 'common':
+      return '普通';
+    case 'uncommon':
+      return '优秀';
+    case 'rare':
+      return '稀有';
+    case 'epic':
+      return '史诗';
+    case 'legendary':
+      return '传说';
+    default:
+      return '普通';
+  }
+};
+
+// Chinese comment replaced with English comment
+const getStatusName = (status: AchievementStatus) => {
+  switch (status) {
+    case 'locked':
+      return '未解锁';
+    case 'in-progress':
+      return '进行中';
+    case 'completed':
+      return '已完成';
+    default:
+      return '未解锁';
+  }
+};
+
+// Chinese comment replaced with English comment
+const AchievementCard: React.FC<AchievementCardProps> = ({
+  id,
+  title,
+  description,
+  imageUrl,
+  rarity,
+  progress = 0,
+  status,
+  earnedDate,
+  tokenReward,
+  xpReward,
+  requirements = [],
+  isNFT = false
+}) => {
+  // Chinese comment replaced with English comment
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  // Chinese comment replaced with English comment
+  const getStatusIcon = () => {
+    switch (status) {
+      case 'locked':
+        return <FiLock size={16} />;
+      case 'in-progress':
+        return <FiClock size={16} />;
+      case 'completed':
+        return <FiAward size={16} />;
+      default:
+        return <FiLock size={16} />;
+    }
+  };
+
+  // Chinese comment replaced with English comment
+  const isGrayscale = status === 'locked';
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
+      <div className="relative">
+        {/* Achievement图片 */}
+        <div className={`aspect-square bg-gray-100 dark:bg-gray-900 relative ${isGrayscale ? 'grayscale' : ''}`}>
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={title}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-t-xl"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <FiAward size={48} className="text-gray-400 dark:text-gray-600" />
+            </div>
+          )}
+          
+          {/* NFT 标识 */}
+          {isNFT && (
+            <div className="absolute top-2 right-2 bg-primary-600 text-white text-xs px-2 py-1 rounded-full">
+              NFT
+            </div>
+          )}
+          
+          {/* 稀有度标签 */}
+          <div className={`absolute bottom-2 left-2 px-2 py-1 rounded-full text-xs ${getRarityColor(rarity)}`}>
+            {getRarityName(rarity)}
+          </div>
+        </div>
+        
+        {/* 进度条（仅在进行中状态显示） */}
+        {status === 'in-progress' && (
+          <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-200 dark:bg-gray-700">
+            <div
+              className="h-1.5 bg-primary-600 dark:bg-primary-500"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        )}
+      </div>
+      
+      {/* Content */}
+      <div className="p-4">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-bold text-gray-900 dark:text-white">{title}</h3>
+          <div className={`flex items-center ${
+            status === 'completed' ? 'text-green-600 dark:text-green-400' :
+            status === 'in-progress' ? 'text-blue-600 dark:text-blue-400' :
+            'text-gray-500 dark:text-gray-400'
+          }`}>
+            {getStatusIcon()}
+          </div>
+        </div>
+        
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          {description}
+        </p>
+        
+        {/* Achievement状态Information */}
+        <div className="space-y-2 mb-3">
+          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+            <span className="inline-block w-20">状态:</span>
+            <span className={
+              status === 'completed' ? 'text-green-600 dark:text-green-400' :
+              status === 'in-progress' ? 'text-blue-600 dark:text-blue-400' :
+              'text-gray-500 dark:text-gray-400'
+            }>
+              {getStatusName(status)}
+              {status === 'in-progress' && ` (${progress}%)`}
+            </span>
+          </div>
+          
+          {status === 'completed' && earnedDate && (
+            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+              <FiCalendar className="mr-1" size={12} />
+              <span>获得于 {formatDate(earnedDate)}</span>
+            </div>
+          )}
+        </div>
+        
+        {/* RewardInformation */}
+        <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+          <div className="text-xs text-gray-500 dark:text-gray-400">
+            Reward: <span className="text-primary-600 dark:text-primary-400">{tokenReward} $LEARN</span>
+          </div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">
+            经验: <span className="text-green-600 dark:text-green-400">{xpReward} XP</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Achievement要求（仅在未完成状态显示） */}
+      {(status === 'locked' || status === 'in-progress') && requirements.length > 0 && (
+        <div className="p-4 pt-0">
+          <div className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">完成要求:</div>
+          <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-1 pl-4 list-disc">
+            {requirements.map((req, index) => (
+              <li key={index}>{req}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AchievementCard; 

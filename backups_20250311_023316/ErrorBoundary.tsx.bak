@@ -1,0 +1,97 @@
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { FiAlertTriangle, FiRefreshCw } from 'react-icons/fi';
+
+interface ErrorBoundaryProps {
+  children: ReactNode;
+  fallback?: ReactNode;
+  onReset?: () => void;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+/**
+ * Error边界组件
+ * 用于捕获子组件树中的 JavaScript Error，记录Error并显示备用 UI
+ */
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null
+    };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    // Chinese comment replaced with English comment
+    return {
+      hasError: true,
+      error
+    };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    // Chinese comment replaced with English comment
+    console.error('组件Error:', error, errorInfo);
+    
+    // Chinese comment replaced with English comment
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo);
+    }
+  }
+
+  handleReset = (): void => {
+    // Chinese comment replaced with English comment
+    this.setState({
+      hasError: false,
+      error: null
+    });
+    
+    // Chinese comment replaced with English comment
+    if (this.props.onReset) {
+      this.props.onReset();
+    }
+  };
+
+  render(): ReactNode {
+    if (this.state.hasError) {
+      // Chinese comment replaced with English comment
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+      
+      // Chinese comment replaced with English comment
+      return (
+        <div className="p-6 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-center">
+          <FiAlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-500 dark:text-red-400" />
+          <h3 className="text-lg font-medium text-red-800 dark:text-red-200 mb-2">
+            组件LoadingFailure
+          </h3>
+          <p className="text-sm text-red-600 dark:text-red-300 mb-4">
+            很抱歉，此Content无法正常显示。请尝试刷新页面或联系支持团队。
+          </p>
+          {this.state.error && (
+            <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/40 rounded text-left overflow-auto max-h-36 text-xs text-red-700 dark:text-red-300 font-mono">
+              {this.state.error.toString()}
+            </div>
+          )}
+          <button
+            onClick={this.handleReset}
+            className="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-sm transition-colors"
+          >
+            <FiRefreshCw className="mr-2" />
+            尝试恢复
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+export default ErrorBoundary; 

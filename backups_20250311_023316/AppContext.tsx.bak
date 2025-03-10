@@ -1,0 +1,398 @@
+import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+
+// Chinese comment replaced with English comment
+export interface User {
+  id: string;
+  publicKey: string;
+  username: string;
+  email?: string;
+  avatarUrl?: string;
+  level: number;
+  xp: number;
+  learnTokens: number;
+  enrolledCourses: string[];
+  completedCourses: string[];
+  achievements: string[];
+  streak: number; // Chinese comment replaced with English comment
+  lastActive: Date;
+}
+
+// Chinese comment replaced with English comment
+export interface Notification {
+  id: string;
+  type: 'success' | 'info' | 'warning' | 'error';
+  title: string;
+  message: string;
+  read: boolean;
+  createdAt: Date;
+  link?: string;
+}
+
+// Chinese comment replaced with English comment
+export interface CourseInfo {
+  id: string;
+  title: string;
+  description: string;
+  thumbnailUrl?: string;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  category: string;
+  progress?: number; // Chinese comment replaced with English comment
+}
+
+// Chinese comment replaced with English comment
+export type AppTheme = 'light' | 'dark' | 'system';
+
+// Chinese comment replaced with English comment
+export interface AppState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isWalletConnected: boolean;
+  isLoading: boolean;
+  notifications: Notification[];
+  unreadNotificationsCount: number;
+  currentCourse: CourseInfo | null;
+  recentCourses: CourseInfo[];
+  theme: AppTheme;
+  error: string | null;
+}
+
+// Chinese comment replaced with English comment
+const initialState: AppState = {
+  user: null,
+  isAuthenticated: false,
+  isWalletConnected: false,
+  isLoading: false,
+  notifications: [],
+  unreadNotificationsCount: 0,
+  currentCourse: null,
+  recentCourses: [],
+  theme: 'system',
+  error: null
+};
+
+// Chinese comment replaced with English comment
+export type AppAction =
+  | { type: 'SET_USER'; payload: User }
+  | { type: 'CLEAR_USER' }
+  | { type: 'SET_WALLET_CONNECTED'; payload: boolean }
+  | { type: 'SET_LOADING'; payload: boolean }
+  | { type: 'ADD_NOTIFICATION'; payload: Notification }
+  | { type: 'MARK_NOTIFICATION_READ'; payload: string }
+  | { type: 'CLEAR_ALL_NOTIFICATIONS' }
+  | { type: 'SET_CURRENT_COURSE'; payload: CourseInfo }
+  | { type: 'CLEAR_CURRENT_COURSE' }
+  | { type: 'ADD_RECENT_COURSE'; payload: CourseInfo }
+  | { type: 'SET_THEME'; payload: AppTheme }
+  | { type: 'SET_ERROR'; payload: string }
+  | { type: 'CLEAR_ERROR' };
+
+// Chinese comment replaced with English comment
+function appReducer(state: AppState, action: AppAction): AppState {
+  switch (action.type) {
+    case 'SET_USER':
+      return {
+        ...state,
+        user: action.payload,
+        isAuthenticated: true
+      };
+    
+    case 'CLEAR_USER':
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false
+      };
+    
+    case 'SET_WALLET_CONNECTED':
+      return {
+        ...state,
+        isWalletConnected: action.payload
+      };
+    
+    case 'SET_LOADING':
+      return {
+        ...state,
+        isLoading: action.payload
+      };
+    
+    case 'ADD_NOTIFICATION':
+      const notifications = [action.payload, ...state.notifications];
+      const unreadCount = notifications.filter(n => !n.read).length;
+      
+      return {
+        ...state,
+        notifications,
+        unreadNotificationsCount: unreadCount
+      };
+    
+    case 'MARK_NOTIFICATION_READ':
+      const updatedNotifications = state.notifications.map(notification =>
+        notification.id === action.payload
+          ? { ...notification, read: true }
+          : notification
+      );
+      
+      return {
+        ...state,
+        notifications: updatedNotifications,
+        unreadNotificationsCount: updatedNotifications.filter(n => !n.read).length
+      };
+    
+    case 'CLEAR_ALL_NOTIFICATIONS':
+      return {
+        ...state,
+        notifications: [],
+        unreadNotificationsCount: 0
+      };
+    
+    case 'SET_CURRENT_COURSE':
+      return {
+        ...state,
+        currentCourse: action.payload
+      };
+    
+    case 'CLEAR_CURRENT_COURSE':
+      return {
+        ...state,
+        currentCourse: null
+      };
+    
+    case 'ADD_RECENT_COURSE':
+      // Chinese comment replaced with English comment
+      const courseExists = state.recentCourses.some(
+        course => course.id === action.payload.id
+      );
+      
+      if (courseExists) {
+        // Chinese comment replaced with English comment
+        const filteredCourses = state.recentCourses.filter(
+          course => course.id !== action.payload.id
+        );
+        return {
+          ...state,
+          recentCourses: [action.payload, ...filteredCourses].slice(0, 5) // Chinese comment replaced with English comment
+        };
+      }
+      
+      return {
+        ...state,
+        recentCourses: [action.payload, ...state.recentCourses].slice(0, 5) // Chinese comment replaced with English comment
+      };
+    
+    case 'SET_THEME':
+      return {
+        ...state,
+        theme: action.payload
+      };
+    
+    case 'SET_ERROR':
+      return {
+        ...state,
+        error: action.payload
+      };
+    
+    case 'CLEAR_ERROR':
+      return {
+        ...state,
+        error: null
+      };
+    
+    default:
+      return state;
+  }
+}
+
+// Chinese comment replaced with English comment
+type AppContextType = {
+  state: AppState;
+  dispatch: React.Dispatch<AppAction>;
+  login: (user: User) => void;
+  logout: () => void;
+  setWalletConnected: (connected: boolean) => void;
+  addNotification: (notification: Omit<Notification, 'id' | 'createdAt' | 'read'>) => void;
+  markNotificationRead: (id: string) => void;
+  clearAllNotifications: () => void;
+  setCurrentCourse: (course: CourseInfo) => void;
+  addRecentCourse: (course: CourseInfo) => void;
+  setTheme: (theme: AppTheme) => void;
+  setError: (message: string) => void;
+  clearError: () => void;
+};
+
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+// Chinese comment replaced with English comment
+interface AppProviderProps {
+  children: ReactNode;
+  initialState?: Partial<AppState>;
+}
+
+export const AppProvider: React.FC<AppProviderProps> = ({
+  children,
+  initialState: customInitialState
+}) => {
+  const [state, dispatch] = useReducer(
+    appReducer,
+    { ...initialState, ...customInitialState }
+  );
+  
+  // Chinese comment replaced with English comment
+  useEffect(() => {
+    // Chinese comment replaced with English comment
+    const savedTheme = localStorage.getItem('app-theme') as AppTheme | null;
+    
+    if (savedTheme) {
+      dispatch({ type: 'SET_THEME', payload: savedTheme });
+    }
+    
+    // Chinese comment replaced with English comment
+    applyTheme(savedTheme || state.theme);
+  }, []);
+  
+  // Chinese comment replaced with English comment
+  useEffect(() => {
+    applyTheme(state.theme);
+    
+    // Chinese comment replaced with English comment
+    if (state.theme !== initialState.theme) {
+      localStorage.setItem('app-theme', state.theme);
+    }
+  }, [state.theme]);
+  
+  // Chinese comment replaced with English comment
+  const applyTheme = (theme: AppTheme) => {
+    if (theme === 'system') {
+      // Chinese comment replaced with English comment
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', prefersDark);
+    } else {
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    }
+  };
+  
+  // Chinese comment replaced with English comment
+  const login = (user: User) => {
+    dispatch({ type: 'SET_USER', payload: user });
+  };
+  
+  const logout = () => {
+    dispatch({ type: 'CLEAR_USER' });
+  };
+  
+  const setWalletConnected = (connected: boolean) => {
+    dispatch({ type: 'SET_WALLET_CONNECTED', payload: connected });
+  };
+  
+  const addNotification = (notification: Omit<Notification, 'id' | 'createdAt' | 'read'>) => {
+    const id = Math.random().toString(36).substring(2, 9);
+    const fullNotification: Notification = {
+      ...notification,
+      id,
+      createdAt: new Date(),
+      read: false
+    };
+    
+    dispatch({ type: 'ADD_NOTIFICATION', payload: fullNotification });
+  };
+  
+  const markNotificationRead = (id: string) => {
+    dispatch({ type: 'MARK_NOTIFICATION_READ', payload: id });
+  };
+  
+  const clearAllNotifications = () => {
+    dispatch({ type: 'CLEAR_ALL_NOTIFICATIONS' });
+  };
+  
+  const setCurrentCourse = (course: CourseInfo) => {
+    dispatch({ type: 'SET_CURRENT_COURSE', payload: course });
+  };
+  
+  const addRecentCourse = (course: CourseInfo) => {
+    dispatch({ type: 'ADD_RECENT_COURSE', payload: course });
+  };
+  
+  const setTheme = (theme: AppTheme) => {
+    dispatch({ type: 'SET_THEME', payload: theme });
+  };
+  
+  const setError = (message: string) => {
+    dispatch({ type: 'SET_ERROR', payload: message });
+  };
+  
+  const clearError = () => {
+    dispatch({ type: 'CLEAR_ERROR' });
+  };
+  
+  const value = {
+    state,
+    dispatch,
+    login,
+    logout,
+    setWalletConnected,
+    addNotification,
+    markNotificationRead,
+    clearAllNotifications,
+    setCurrentCourse,
+    addRecentCourse,
+    setTheme,
+    setError,
+    clearError
+  };
+  
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+};
+
+// Chinese comment replaced with English comment
+export const useAppContext = (): AppContextType => {
+  const context = useContext(AppContext);
+  
+  if (context === undefined) {
+    throw new Error('useAppContext必须在AppProvider内部使用');
+  }
+  
+  return context;
+};
+
+// Chinese comment replaced with English comment
+export const useAuth = () => {
+  const { state, login, logout, setWalletConnected } = useAppContext();
+  
+  return {
+    user: state.user,
+    isAuthenticated: state.isAuthenticated,
+    isWalletConnected: state.isWalletConnected,
+    login,
+    logout,
+    setWalletConnected
+  };
+};
+
+// Chinese comment replaced with English comment
+export const useTheme = () => {
+  const { state, setTheme } = useAppContext();
+  
+  return {
+    theme: state.theme,
+    setTheme
+  };
+};
+
+// Chinese comment replaced with English comment
+export const useNotifications = () => {
+  const {
+    state,
+    addNotification,
+    markNotificationRead,
+    clearAllNotifications
+  } = useAppContext();
+  
+  return {
+    notifications: state.notifications,
+    unreadCount: state.unreadNotificationsCount,
+    addNotification,
+    markAsRead: markNotificationRead,
+    clearAll: clearAllNotifications
+  };
+};
+
+export default AppContext; 
