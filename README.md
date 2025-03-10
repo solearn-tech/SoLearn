@@ -1,7 +1,7 @@
 # SoLearn - Decentralized Learning Platform on Solana
 
 <div align="center">
-  <img src="assets/images/logo.svg" alt="SoLearn Logo" width="200" />
+  <img src="assets/images/logo.png" alt="SoLearn Logo" width="200" />
   <h1>SoLearn</h1>
   <p>Decentralized Learning Platform on Solana</p>
   <p><i>Learn to Earn on Solana - Earn rewards while learning</i></p>
