@@ -1,40 +1,70 @@
 #!/bin/bash
 
-# Script to detect Chinese characters in files (UTF-8 encoded)
-# This script searches for files containing Chinese characters in the specified directories
+# Script to detect Chinese characters in source code files
+# This script scans the project for any files containing Chinese characters
+# and outputs their locations for further processing.
 
-echo "Checking for files containing Chinese characters..."
+echo "Scanning for files containing Chinese characters..."
 
-# List of directories to search
-DIRS_TO_SEARCH=("apps" "contracts" "docs" "scripts" "shared" "assets" ".")
+# Directories to exclude from scanning
+EXCLUDE_DIRS=(
+  "node_modules"
+  ".git"
+  "build"
+  "dist"
+  "coverage"
+  ".next"
+  "scripts"  # Exclude scripts directory as it contains intentional Chinese characters for translation
+)
 
-# Define file extensions to search
-FILE_EXTS=("js" "jsx" "ts" "tsx" "md" "json" "css" "scss" "html" "toml" "rs")
+# File extensions to scan
+EXTENSIONS=(
+  "js"
+  "jsx"
+  "ts"
+  "tsx"
+  "html"
+  "css"
+  "scss"
+  "md"
+  "json"
+  "yaml"
+  "yml"
+)
 
-# Build the find command with file extensions
-FIND_EXT_ARGS=()
-for ext in "${FILE_EXTS[@]}"; do
-  FIND_EXT_ARGS+=(-o -name "*.$ext")
+# Build exclude pattern
+EXCLUDE_PATTERN=""
+for dir in "${EXCLUDE_DIRS[@]}"; do
+  EXCLUDE_PATTERN="$EXCLUDE_PATTERN -not -path \"*/$dir/*\""
 done
 
-# Remove the first -o from the array
-FIND_EXT_ARGS=("${FIND_EXT_ARGS[@]:1}")
-
-# Find files containing Chinese characters using perl (more accurate)
-for dir in "${DIRS_TO_SEARCH[@]}"; do
-  if [ -d "$dir" ]; then
-    echo "Checking directory: $dir"
-    find "$dir" -type f \( "${FIND_EXT_ARGS[@]}" \) -not -path "*/node_modules/*" -not -path "*/\.*" -print0 | 
-    while IFS= read -r -d '' file; do
-      if perl -ne 'exit 1 if /[\x{4e00}-\x{9fff}]/;' "$file"; then
-        : # No Chinese characters found
-      else
-        echo "Chinese characters found in: $file"
-      fi
-    done
+# Build extension pattern
+EXT_PATTERN=""
+for ext in "${EXTENSIONS[@]}"; do
+  if [ -z "$EXT_PATTERN" ]; then
+    EXT_PATTERN="-name \"*.$ext\""
   else
-    echo "Directory not found: $dir"
+    EXT_PATTERN="$EXT_PATTERN -o -name \"*.$ext\""
   fi
 done
 
-echo "Check completed." 
+# Find command to locate files with Chinese characters
+FIND_CMD="find . $EXCLUDE_PATTERN \( $EXT_PATTERN \) -type f -exec grep -l \"[^\x00-\x7F]\" {} \;"
+
+# Execute the find command
+eval $FIND_CMD | while read -r file; do
+  echo "Chinese characters found in: $file"
+  
+  # Optional: Show the lines containing Chinese characters
+  grep -n "[^\x00-\x7F]" "$file" | head -5
+  
+  # If there are more than 5 instances, indicate there are more
+  COUNT=$(grep -c "[^\x00-\x7F]" "$file")
+  if [ $COUNT -gt 5 ]; then
+    echo "... and $((COUNT - 5)) more instances"
+  fi
+  
+  echo "-----------------------------------"
+done
+
+echo "Scan complete." 

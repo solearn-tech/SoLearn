@@ -1,7 +1,7 @@
 # Solearn - Decentralized Learning Platform on Solana
 
 <div align="center">
-  <img src="assets/images/logo.svg" alt="Solearn Logo" width="200" />
+  <img src="assets/images/solearn_logo.png" alt="Solearn Logo" width="200" />
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
   [![Website](https://img.shields.io/badge/Website-solearn.co-blue)](https://www.solearn.co/)
@@ -455,56 +455,29 @@ async function verifyCompletion(userId: string, courseId: string) {
 - ⏳ Decentralized storage for all course content
 - ⏳ Enterprise solutions for Web3 workforce training
 
-## 📂 Project Structure
+## 📁 Project Structure
 
-```
-SoLearn/
-├── apps/                   # Applications
-│   ├── web/                # Frontend Web app (Next.js)
-│   │   ├── public/         # Static assets
-│   │   ├── src/
-│   │   │   ├── components/ # UI components
-│   │   │   ├── contexts/   # React contexts for state
-│   │   │   ├── hooks/      # Custom React hooks
-│   │   │   ├── pages/      # Next.js pages
-│   │   │   ├── services/   # API service calls
-│   │   │   ├── store/      # Global state management
-│   │   │   ├── styles/     # CSS and styling
-│   │   │   ├── types/      # TypeScript definitions
-│   │   │   └── utils/      # Utility functions
-│   │   └── tests/          # Frontend tests
-│   │
-│   └── api/                # Backend API service (Express)
-│       ├── src/
-│       │   ├── controllers/# Request handlers
-│       │   ├── middleware/ # Express middleware
-│       │   ├── models/     # Data models
-│       │   ├── routes/     # API routes
-│       │   ├── services/   # Business logic
-│       │   └── utils/      # Utility functions
-│       └── tests/          # Backend tests
-│
-├── contracts/              # Solana smart contracts
-│   ├── learn-token/        # $LEARN token contract
-│   │   ├── programs/       # Anchor programs
-│   │   └── tests/          # Contract tests
-│   │
-│   └── achievements/       # Learning achievement NFT contract
-│       ├── programs/       # Anchor programs
-│       └── tests/          # Contract tests
-│
-├── sdk/                    # JavaScript SDK
-│   ├── src/                # SDK source code
-│   │   ├── contracts/      # Contract interaction
-│   │   ├── types/          # TypeScript definitions
-│   │   └── utils/          # Utility functions
-│   └── tests/              # SDK tests
-│
-├── shared/                 # Shared utilities and types
-├── docs/                   # Documentation
-├── scripts/                # Deployment and test scripts
-└── assets/                 # Project assets
-```
+The Solearn project is organized into several key directories:
+
+- **apps/** - Contains all application code
+  - **web/** - Main web application frontend (React)
+  - **admin/** - Administrative dashboard
+  - **backend/** - API server and backend services
+
+- **contracts/** - Solana smart contracts
+  - **learning/** - Learning module and reward distribution contracts
+  - **token/** - LEARN token implementation
+  - **governance/** - DAO governance contracts
+
+- **scripts/** - Utility scripts for development and deployment
+  - Scripts for setup, deployment, and maintenance
+
+- **docs/** - Project documentation
+  - API specifications, architecture diagrams, and guides
+
+- **assets/** - Static assets including images and design files
+
+- **shared/** - Shared utilities and types used across applications
 
 ## 🛠️ Development Guide
 
@@ -529,6 +502,20 @@ cd contracts/learn-token
 anchor build
 anchor test
 ```
+
+### Internationalization
+
+SoLearn is fully internationalized and supports multiple languages. The platform is designed with English as the primary language, with plans to add support for additional languages in the future.
+
+#### Internationalization Scripts
+
+The project includes several utility scripts in the `scripts/` directory to help with internationalization:
+
+- `detect_chinese.sh` - Scans the codebase for any Chinese characters
+- `replace_chinese.sh` - Replaces Chinese text with English equivalents using a translation mapping
+- `deep_replace_chinese.sh` - Advanced script for handling complex Chinese text replacement
+
+These scripts are used during development to ensure consistent language usage across the codebase.
 
 ## 🤝 Contributing
 

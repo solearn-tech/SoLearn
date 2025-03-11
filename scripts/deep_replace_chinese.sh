@@ -3,6 +3,10 @@
 # Advanced script to replace all Chinese characters in source code files
 # This script handles various contexts including comments, documentation blocks,
 # and other specialized cases
+#
+# IMPORTANT: This is a utility script used during internationalization process.
+# The Chinese characters in this file are examples for search & replace patterns
+# and are intentionally kept for reference purposes.
 
 echo "Starting deep Chinese character replacement..."
 
@@ -41,12 +45,13 @@ for FILE_PATH in $CHINESE_FILES; do
   
   # 3. Replace common Chinese patterns
   # Formatted text parts (year, month, etc.)
-  LC_ALL=C sed -i '' 's/年前/years ago/g' "$FILE_PATH"
-  LC_ALL=C sed -i '' 's/个月前/months ago/g' "$FILE_PATH"
-  LC_ALL=C sed -i '' 's/天前/days ago/g' "$FILE_PATH"
-  LC_ALL=C sed -i '' 's/小时前/hours ago/g' "$FILE_PATH"
-  LC_ALL=C sed -i '' 's/分钟前/minutes ago/g' "$FILE_PATH"
-  LC_ALL=C sed -i '' 's/秒前/seconds ago/g' "$FILE_PATH"
+  # Below are Chinese time expressions with their English equivalents
+  LC_ALL=C sed -i '' 's/年前/years ago/g' "$FILE_PATH"      # Years ago
+  LC_ALL=C sed -i '' 's/个月前/months ago/g' "$FILE_PATH"   # Months ago
+  LC_ALL=C sed -i '' 's/天前/days ago/g' "$FILE_PATH"       # Days ago
+  LC_ALL=C sed -i '' 's/小时前/hours ago/g' "$FILE_PATH"    # Hours ago
+  LC_ALL=C sed -i '' 's/分钟前/minutes ago/g' "$FILE_PATH"  # Minutes ago
+  LC_ALL=C sed -i '' 's/秒前/seconds ago/g' "$FILE_PATH"    # Seconds ago
   
   # 4. Replace template literals with Chinese
   # This is complex and we'll use a multi-line approach

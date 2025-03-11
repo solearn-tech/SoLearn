@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 249, 250, 251;
+  --primary-color: 79, 70, 229;
+  --primary-color-light: 99, 102, 241;
+  --primary-color-dark: 67, 56, 202;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 30, 41, 59;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* Custom utility classes for our primary color */
+.bg-primary-600 {
+  background-color: rgb(var(--primary-color));
+}
+
+.bg-primary-700 {
+  background-color: rgb(var(--primary-color-dark));
+}
+
+.hover\:bg-primary-700:hover {
+  background-color: rgb(var(--primary-color-dark));
+}
+
+.text-primary-600 {
+  color: rgb(var(--primary-color));
+}
+
+.text-primary-400 {
+  color: rgb(var(--primary-color-light));
+}
+
+.border-primary-600 {
+  border-color: rgb(var(--primary-color));
+}
+
+.focus\:ring-primary-500:focus {
+  --tw-ring-color: rgba(var(--primary-color), 0.5);
+}
+
+.focus\:border-primary-500:focus {
+  border-color: rgba(var(--primary-color), 0.5);
+}
+
+/* Override Solana wallet adapter styles */
+.wallet-adapter-button {
+  @apply bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md shadow-sm font-medium !important;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+/* Tailwind custom safelist classes */
+/* Add any classes that are dynamically generated here to prevent purging */
+/* These classes are typically purged by Tailwind in production because they're not explicitly used in templates */
+
+/* Indigo */
+.bg-indigo-100 {}
+.dark\:bg-indigo-900\/30 {}
+.text-indigo-600 {}
+.dark\:text-indigo-400 {}
+.dark\:hover\:text-indigo-300:hover {}
+.hover\:text-indigo-900:hover {}
+
+/* Blue */
+.bg-blue-100 {}
+.dark\:bg-blue-900\/30 {}
+.text-blue-600 {}
+.dark\:text-blue-400 {}
+.text-blue-800 {}
+.dark\:text-blue-300 {}
+.dark\:hover\:text-blue-300:hover {}
+.hover\:text-blue-900:hover {}
+
+/* Green */
+.bg-green-100 {}
+.dark\:bg-green-900\/30 {}
+.text-green-600 {}
+.dark\:text-green-400 {}
+.text-green-800 {}
+.dark\:text-green-300 {}
+.dark\:hover\:text-green-300:hover {}
+.hover\:text-green-900:hover {}
+
+/* Yellow */
+.bg-yellow-100 {}
+.dark\:bg-yellow-900\/30 {}
+.text-yellow-600 {}
+.dark\:text-yellow-400 {}
+.text-yellow-800 {}
+.dark\:text-yellow-300 {}
+.dark\:hover\:text-yellow-300:hover {}
+.hover\:text-yellow-900:hover {}
+
+/* Purple */
+.bg-purple-100 {}
+.dark\:bg-purple-900\/30 {}
+.text-purple-600 {}
+.dark\:text-purple-400 {}
+.text-purple-800 {}
+.dark\:text-purple-300 {}
+.dark\:hover\:text-purple-300:hover {}
+.hover\:text-purple-900:hover {}
+
+/* Red */
+.bg-red-100 {}
+.dark\:bg-red-900\/30 {}
+.text-red-600 {}
+.dark\:text-red-400 {}
+.text-red-800 {}
+.dark\:text-red-300 {}
+.dark\:hover\:text-red-300:hover {}
+.hover\:text-red-900:hover {} 

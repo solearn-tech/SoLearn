@@ -1,0 +1,46 @@
+{
+  "name": "solearn-admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.0",
+    "@mui/x-data-grid": "^6.4.0",
+    "@solana/wallet-adapter-base": "^0.9.22",
+    "@solana/wallet-adapter-react": "^0.15.32",
+    "@solana/wallet-adapter-react-ui": "^0.9.31",
+    "@solana/wallet-adapter-wallets": "^0.19.16",
+    "@solana/web3.js": "^1.75.0",
+    "apexcharts": "^3.40.0",
+    "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
+    "js-cookie": "^3.0.5",
+    "next": "13.4.2",
+    "react": "18.2.0",
+    "react-apexcharts": "^1.4.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.43.9",
+    "react-hot-toast": "^2.4.1",
+    "swr": "^2.1.5"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.3",
+    "@types/node": "20.1.4",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "autoprefixer": "^10.4.14",
+    "eslint": "8.40.0",
+    "eslint-config-next": "13.4.2",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.2",
+    "typescript": "5.0.4"
+  }
+} 

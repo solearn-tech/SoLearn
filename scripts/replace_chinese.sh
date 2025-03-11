@@ -2,6 +2,10 @@
 
 # Script to replace Chinese comments and strings in TypeScript/React files
 # Usage: ./replace_chinese.sh <file_path>
+#
+# IMPORTANT: This is a utility script used during internationalization process.
+# The Chinese characters in this file are translation mappings and are intentionally 
+# kept for reference purposes. Each Chinese term has its English equivalent.
 
 if [ -z "$1" ]; then
   echo "Usage: $0 <file_path>"
@@ -20,6 +24,7 @@ fi
 cp "$FILE_PATH" "$BACKUP_PATH"
 
 # Common translations for Chinese text patterns in code
+# Format: ["Chinese term"]="English equivalent"
 declare -A TRANSLATIONS=(
   ["评论"]="Comment"
   ["回复"]="Reply"

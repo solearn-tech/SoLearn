@@ -53,7 +53,7 @@ export interface CommentProps {
   maxReplies?: number;
 }
 
-// Chinese comment replaced with English comment
+// Helper function to format dates as relative time
 const getTimeAgo = (date: Date): string => {
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   
@@ -85,7 +85,7 @@ const getTimeAgo = (date: Date): string => {
   return Math.floor(seconds) + ' seconds ago';
 };
 
-// Chinese comment replaced with English comment
+// Comment component for displaying individual comments
 const Comment = ({
   comment,
   contextId,
@@ -109,12 +109,12 @@ const Comment = ({
   const [showAllReplies, setShowAllReplies] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   
-  // Chinese comment replaced with English comment
+  // Get visible replies based on showAllReplies state
   const visibleReplies = showAllReplies 
     ? comment.replies || [] 
     : (comment.replies || []).slice(0, maxReplies);
   
-  // Chinese comment replaced with English comment
+  // Handle like button click
   const handleLike = () => {
     if (onLike) {
       onLike(comment.id);
@@ -123,7 +123,7 @@ const Comment = ({
     }
   };
   
-  // Chinese comment replaced with English comment
+  // Handle reply submission
   const handleSubmitReply = () => {
     if (onReply && replyContent.trim()) {
       onReply(comment.id, replyContent);
@@ -132,7 +132,7 @@ const Comment = ({
     }
   };
   
-  // Chinese comment replaced with English comment
+  // Handle edit submission
   const handleSubmitEdit = () => {
     if (onEdit && editContent.trim()) {
       onEdit(comment.id, editContent);
@@ -140,20 +140,20 @@ const Comment = ({
     }
   };
   
-  // Chinese comment replaced with English comment
+  // Handle comment deletion with confirmation
   const handleDelete = () => {
     if (onDelete) {
       if (confirmDelete) {
         onDelete(comment.id);
       } else {
         setConfirmDelete(true);
-        // Chinese comment replaced with English comment
+        // Reset confirmation state after 5 seconds
         setTimeout(() => setConfirmDelete(false), 5000);
       }
     }
   };
   
-  // Chinese comment replaced with English comment
+  // Component to display author badges (admin, instructor, level)
   const AuthorBadge = () => {
     if (comment.author.isAdmin) {
       return <span className="px-2 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full ml-2">Admin</span>;
@@ -172,7 +172,7 @@ const Comment = ({
   
   return (
     <div className={`p-4 border-b dark:border-gray-700 ${comment.isPinned ? 'bg-yellow-50 dark:bg-yellow-900/10' : ''}`}>
-      {/* Comment被置顶标记 */}
+      {/* Pinned comment indicator */}
       {comment.isPinned && (
         <div className="mb-2 text-xs text-yellow-600 dark:text-yellow-400 font-medium flex items-center">
           <svg 
@@ -187,7 +187,7 @@ const Comment = ({
       )}
       
       <div className="flex">
-        {/* 头像 */}
+        {/* Avatar */}
         <div className="mr-3 flex-shrink-0">
           <div className="relative w-10 h-10 rounded-full overflow-hidden">
             {comment.author.avatar ? (
@@ -251,10 +251,10 @@ const Comment = ({
             </div>
           )}
           
-          {/* Comment操作 */}
+          {/* Comment actions */}
           {showActions && !isEditing && (
             <div className="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400">
-              {/* Like按钮 */}
+              {/* Like button */}
               <button
                 onClick={handleLike}
                 className={`flex items-center hover:text-gray-700 dark:hover:text-gray-300 ${
@@ -266,7 +266,7 @@ const Comment = ({
                 <span className="ml-1">Like</span>
               </button>
               
-              {/* Reply按钮 */}
+              {/* Reply button */}
               {allowReplies && (
                 <button
                   onClick={() => setIsReplying(!isReplying)}
@@ -277,7 +277,7 @@ const Comment = ({
                 </button>
               )}
               
-              {/* Author的Edit和Delete操作 */}
+              {/* Author's edit and delete actions */}
               {comment.isUserComment && (
                 <>
                   <button
@@ -302,7 +302,7 @@ const Comment = ({
                 </>
               )}
               
-              {/* Report按钮 */}
+              {/* Report button */}
               {!comment.isUserComment && onReport && (
                 <button
                   onClick={() => onReport(comment.id, 'Violation content')}
@@ -315,7 +315,7 @@ const Comment = ({
             </div>
           )}
           
-          {/* Reply输入框 */}
+          {/* Reply input */}
           {isReplying && (
             <div className="mt-3">
               <textarea
@@ -345,7 +345,7 @@ const Comment = ({
             </div>
           )}
           
-          {/* CommentReply */}
+          {/* Comment replies */}
           {showReplies && comment.replies && comment.replies.length > 0 && (
             <div className="mt-3 pl-3 border-l-2 border-gray-200 dark:border-gray-700">
               {visibleReplies.map((reply) => (
@@ -400,7 +400,7 @@ const Comment = ({
                 </div>
               ))}
               
-              {/* 显示更多Reply按钮 */}
+              {/* Show more replies button */}
               {comment.replies.length > maxReplies && !showAllReplies && (
                 <button
                   onClick={() => setShowAllReplies(true)}
@@ -410,7 +410,7 @@ const Comment = ({
                 </button>
               )}
               
-              {/* HideReply按钮 */}
+              {/* Hide replies button */}
               {showAllReplies && comment.replies.length > maxReplies && (
                 <button
                   onClick={() => setShowAllReplies(false)}
@@ -427,7 +427,7 @@ const Comment = ({
   );
 };
 
-// Chinese comment replaced with English comment
+// CommentSection props interface
 export interface CommentSectionProps {
   comments: Comment[];
   contextId: string;
@@ -444,7 +444,7 @@ export interface CommentSectionProps {
   maxRepliesPerComment?: number;
 }
 
-// Chinese comment replaced with English comment
+// Main comment section component
 const CommentSection = ({
   comments,
   contextId,
@@ -462,7 +462,7 @@ const CommentSection = ({
 }: CommentSectionProps) => {
   const [newComment, setNewComment] = useState('');
   
-  // Chinese comment replaced with English comment
+  // Handle new comment submission
   const handleCreateComment = () => {
     if (onCreateComment && newComment.trim()) {
       onCreateComment(newComment);
@@ -470,7 +470,7 @@ const CommentSection = ({
     }
   };
   
-  // Chinese comment replaced with English comment
+  // Sort comments with pinned comments first, then by date
   const sortedComments = [...comments].sort((a, b) => {
     if (a.isPinned && !b.isPinned) return -1;
     if (!a.isPinned && b.isPinned) return 1;
@@ -488,7 +488,7 @@ const CommentSection = ({
         </span>
       </div>
       
-      {/* 创建Comment */}
+      {/* Create Comment */}
       {currentUserCanComment && (
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <textarea
