@@ -166,8 +166,8 @@ const RewardsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Head>
-        <title>Rewards | SoLearn</title>
-        <meta name="description" content="View your token rewards and transaction history" />
+        <title>Rewards | Solearn</title>
+        <meta name="description" content="View your earned rewards and achievements" />
       </Head>
 
       <main className="container mx-auto px-4 py-8">

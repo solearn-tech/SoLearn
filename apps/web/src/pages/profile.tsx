@@ -112,7 +112,7 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Head>
-        <title>Profile | SoLearn</title>
+        <title>Profile | Solearn</title>
         <meta name="description" content="Manage your SoLearn profile" />
       </Head>
 

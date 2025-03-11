@@ -27,11 +27,11 @@
     "node": ">=18.0.0"
   },
   "packageManager": "npm@9.6.7",
-  "author": "SoLearn Team",
+  "author": "Solearn Team",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/solearn.git"
+    "url": "https://github.com/solearn-tech/SoLearn.git"
   },
   "keywords": [
     "solana",

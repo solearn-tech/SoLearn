@@ -7,8 +7,8 @@ export default function RegisterPage() {
     <WalletContextProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 sm:py-16 lg:py-24">
         <Head>
-          <title>Create Account | SoLearn</title>
-          <meta name="description" content="Join SoLearn to start learning blockchain skills and earning rewards." />
+          <title>Create Account | Solearn</title>
+          <meta name="description" content="Join Solearn to start learning blockchain skills and earning rewards." />
         </Head>
 
         <div className="container mx-auto px-4">

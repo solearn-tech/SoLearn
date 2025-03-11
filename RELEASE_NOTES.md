@@ -1,6 +1,6 @@
-# SoLearn v1.0.0 - Initial Release
+# Solearn v1.0.0 - Initial Release
 
-We are excited to announce the initial release of SoLearn, a decentralized learning platform built on the Solana blockchain. This release marks the first stable version of our "Learn-to-Earn" platform, designed to incentivize blockchain education through token rewards.
+We are excited to announce the initial release of Solearn, a decentralized learning platform built on the Solana blockchain. This release marks the first stable version of our "Learn-to-Earn" platform, designed to incentivize blockchain education through token rewards.
 
 ## Key Features
 
@@ -31,7 +31,7 @@ We are excited to announce the initial release of SoLearn, a decentralized learn
 
 ## Getting Started
 
-Visit [solearn.co](https://solearn.co) to create your account and start your blockchain learning journey. Connect your Solana wallet to begin earning rewards as you learn.
+Visit [solearn.co](https://www.solearn.co/) to create your account and start your blockchain learning journey. Connect your Solana wallet to begin earning rewards as you learn.
 
 ## What's Next
 
@@ -51,4 +51,4 @@ For local development setup, please refer to our [README.md](https://github.com/
 
 ## License
 
-SoLearn is released under the MIT License. 
+Solearn is released under the MIT License. 

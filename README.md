@@ -1,31 +1,27 @@
-# SoLearn - Decentralized Learning Platform on Solana
+# Solearn - Decentralized Learning Platform on Solana
 
 <div align="center">
-  <img src="assets/images/logo.png" alt="SoLearn Logo" width="200" />
-  <h1>SoLearn</h1>
-  <p>Decentralized Learning Platform on Solana</p>
-  <p><i>Learn to Earn on Solana - Earn rewards while learning</i></p>
+  <img src="assets/images/logo.svg" alt="Solearn Logo" width="200" />
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+  [![Website](https://img.shields.io/badge/Website-solearn.co-blue)](https://www.solearn.co/)
+  [![Twitter](https://img.shields.io/badge/Twitter-@SOLEARN2314-blue)](https://x.com/SOLEARN2314)
 </div>
 
-## Project Links
+## 🔑 Overview
 
-- **Website**: [solearn.co](https://solearn.co)
-- **GitHub**: [github.com/solearn-tech/SoLearn](https://github.com/solearn-tech/SoLearn)
-- **Twitter**: Coming soon
-
-## Project Introduction
-
-SoLearn is an innovative decentralized learning platform built on the Solana blockchain. The platform adopts a "Learn-to-Earn" model, incentivizing users to learn blockchain and Web3-related knowledge through token rewards. Our mission is to lower the barrier to entry for blockchain technology and promote broader Web3 education through economic incentives.
+Solearn is a groundbreaking decentralized learning platform built on the Solana blockchain that implements a **"Learn-to-Earn"** model. The platform incentivizes users to learn blockchain and Web3-related knowledge through token rewards, making education both engaging and financially rewarding. Our mission is to lower the barrier to entry for blockchain technology and promote broader Web3 education through economic incentives.
 
 ### Key Features
 
-- **Token Rewards**: Earn $LEARN tokens after completing courses and quizzes
-- **Achievement NFTs**: Receive unique learning achievement NFTs to certify your skills
-- **Quality Content**: Carefully curated Web3 and blockchain courses
-- **Interactive Learning**: Immersive learning experience with real-time feedback
+- **Token Rewards**: Earn $LEARN tokens for completing courses and quizzes
+- **Achievement NFTs**: Receive unique NFT certificates confirming your skills
+- **Interactive Learning**: Immersive experience with video content, quizzes, and coding challenges
+- **Personalized Paths**: Customized learning journeys based on your interests and skill level
+- **Community Engagement**: Discussion forums, learning guilds, and collaborative projects
 - **Decentralized Governance**: Community participation in course review and platform development
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 
@@ -34,19 +30,14 @@ SoLearn is an innovative decentralized learning platform built on the Solana blo
 - Solana CLI (for blockchain interaction and testing)
 - Phantom or other Solana wallets
 
-### Installation Steps
-
-1. Clone the project
+### Installation
 
 ```bash
+# Clone the repository
 git clone https://github.com/solearn-tech/SoLearn.git
 cd SoLearn
-```
 
-2. Install dependencies
-
-```bash
-# Install root directory dependencies
+# Install dependencies
 yarn install
 
 # Install frontend dependencies
@@ -56,33 +47,415 @@ yarn install
 # Install backend dependencies
 cd ../api
 yarn install
-```
 
-3. Set up environment variables
-
-```bash
-# Frontend environment variables
+# Set up environment variables
 cp apps/web/.env.example apps/web/.env.local
-
-# Backend environment variables
 cp apps/api/.env.example apps/api/.env
-```
 
-4. Start development servers
-
-```bash
-# Start frontend
+# Start development servers
+# Frontend
 cd apps/web
 yarn dev
 
-# Start backend (new terminal)
+# Backend (in a new terminal)
 cd apps/api
 yarn dev
 ```
 
-Now, you can visit http://localhost:3000 in your browser to view the SoLearn frontend application.
+Visit http://localhost:3000 in your browser to view the application.
 
-## Project Structure
+## 🏗️ Architecture
+
+Solearn implements a comprehensive full-stack decentralized application architecture with several key components working together:
+
+<div align="center">
+  <img src="assets/images/architecture.png" alt="Solearn Technical Architecture" width="800">
+</div>
+
+### System Components
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   Web Frontend  │     │  Admin Portal   │     │   Mobile Apps   │
+└────────┬────────┘     └────────┬────────┘     └────────┬────────┘
+         │                       │                       │
+         └───────────────┬───────┴───────────────┬───────┘
+                         │                       │
+                         ▼                       ▼
+              ┌─────────────────────┐   ┌─────────────────────┐
+              │    API Gateway     │   │   Authentication    │
+              └─────────┬─────────-┘   └─────────┬─────────-─┘
+                        │                        │
+         ┌──────────────┴────────────────┬──────┴──────────────┐
+         │                               │                     │
+         ▼                               ▼                     ▼
+┌─────────────────┐           ┌─────────────────┐    ┌─────────────────┐
+│  User Service   │           │ Learning Service│    │ Community Service│
+└─────────────────┘           └─────────────────┘    └─────────────────┘
+         │                               │                     │
+         └───────────────┬───────────────┴─────────────┬──────┘
+                         │                             │
+                         ▼                             ▼
+              ┌─────────────────────┐       ┌─────────────────────┐
+              │  MongoDB Database   │       │   Solana Blockchain │
+              └─────────────────────┘       └─────────────────────┘
+```
+
+### Frontend Layer
+- **Next.js React Application**
+  - Server-side rendering for SEO optimization
+  - React Context API for state management
+  - Responsive design with TailwindCSS
+  - TypeScript for type safety
+  - Wallet adapter integration for Solana wallets
+
+### Backend Layer
+- **Express API Service**
+  - RESTful API with versioning
+  - JWT-based authentication with wallet signatures
+  - MongoDB for flexible data storage
+  - Rate limiting and security middleware
+  - Modular architecture for maintainability
+
+### Blockchain Layer
+- **Solana Smart Contracts**
+  - SPL Token implementation for $LEARN tokens
+  - Metaplex integration for NFT achievement issuance
+  - On-chain verification of learning achievements
+  - Governance mechanisms for platform development
+  - Program Derived Addresses (PDAs) for secure data storage
+
+### Storage Layer
+- **Hybrid Storage Solution**
+  - MongoDB for user data and learning progress
+  - IPFS/Arweave for immutable course content
+  - Solana blockchain for token transactions and achievements
+  - CDN for static assets and media content
+
+## 💻 Data Flow
+
+Solearn implements several key data flows that enable seamless interaction between the frontend, backend, and blockchain layers:
+
+### 1. Authentication Flow
+
+```
+┌───────────┐      ┌───────────┐      ┌───────────┐      ┌───────────┐
+│           │      │           │      │           │      │           │
+│   User    │──1──▶│ Frontend  │──2──▶│  Backend  │──3──▶│  Solana   │
+│           │      │           │      │           │      │  Wallet   │
+│           │◀─8───│           │◀─7───│           │◀─4───│           │
+└───────────┘      └───────────┘      └───────────┘      └───────────┘
+                         │                  ▲                  │
+                         │                  │                  │
+                         │                  6                  │
+                         │                  │                  │
+                         │            ┌───────────┐            │
+                         └────5──────▶│ Database  │◀────4──────┘
+                                      │           │
+                                      └───────────┘
+```
+
+1. User connects wallet to frontend
+2. Frontend requests authentication from backend
+3. Backend requests wallet signature for authentication challenge
+4. Wallet provides signed message
+5. Backend verifies signature and creates user profile in database
+6. Backend retrieves user data
+7. Backend issues JWT token for session
+8. Frontend stores JWT for subsequent API calls
+
+### 2. Learning Flow
+
+```
+┌───────────┐      ┌───────────┐      ┌───────────┐      ┌───────────┐
+│           │      │           │      │           │      │           │
+│   User    │──1──▶│ Frontend  │──2──▶│  Backend  │──3──▶│ Database  │
+│           │      │           │      │           │      │           │
+│           │◀─8───│           │◀─7───│           │◀─4───│           │
+└───────────┘      └───────────┘      └───────────┘      └───────────┘
+                                           │                   
+                                           │                   
+                                           5                   
+                                           │                   
+                                           ▼                   
+                                      ┌───────────┐            
+                                      │  Solana   │            
+                                      │ Blockchain│            
+                                      │           │            
+                                      └───────────┘            
+```
+
+1. User accesses course content through frontend
+2. Frontend tracks progress and sends to backend API
+3. Backend stores learning progress in database
+4. Database confirms storage of progress data
+5. Backend checks achievement criteria on blockchain
+6. If criteria met, backend triggers token rewards
+7. Backend sends updated progress to frontend
+8. Frontend displays updated progress and rewards to user
+
+### 3. Reward Distribution Flow
+
+```
+┌───────────┐      ┌───────────┐      ┌───────────┐      ┌───────────┐
+│           │      │           │      │           │      │           │
+│   User    │──1──▶│ Frontend  │──2──▶│  Backend  │──3──▶│  Smart    │
+│           │      │           │      │           │      │ Contracts │
+│           │◀─8───│           │◀─7───│           │◀─4───│           │
+└───────────┘      └───────────┘      └───────────┘      └───────────┘
+                                           │                  │
+                                           │                  │
+                                           │                  5
+                                           │                  │
+                                           │                  ▼
+                                           │            ┌───────────┐
+                                           └─────6─────▶│ Database  │
+                                                        │           │
+                                                        └───────────┘
+```
+
+1. User completes achievement criteria (course, quiz, etc.)
+2. Frontend notifies backend of completion
+3. Backend triggers reward distribution via smart contract
+4. Smart contract verifies achievement criteria
+5. Smart contract mints/transfers tokens and NFTs to user wallet
+6. Backend records reward distribution in database
+7. Backend confirms successful distribution to frontend
+8. Frontend displays reward notification to user
+
+## 💰 Token Economics
+
+The $LEARN token is the native utility token of the Solearn platform:
+
+### Token Distribution
+
+| Allocation | Percentage | Amount | Purpose |
+|------------|------------|--------|---------|
+| Initial Token Sale | 15% | 150,000,000 | Initial liquidity and early adopters |
+| Team & Advisors | 25% | 250,000,000 | Team incentives and advisors compensation |
+| Ecosystem Fund | 20% | 200,000,000 | Ecosystem development and partnerships |
+| Learning Mining Rewards | 30% | 300,000,000 | User rewards for learning activities |
+| Liquidity Provision Incentives | 5% | 50,000,000 | DEX liquidity incentives |
+| Strategic Partners & Investors | 5% | 50,000,000 | Strategic partnerships and investments |
+
+### Token Utility
+- **Learning Activities**: Rewards for course completion and achievements
+- **Governance**: Voting rights for platform development decisions
+- **Premium Features**: Access to exclusive content and features
+- **Creator Incentives**: Rewards for content creators and educators
+- **Staking**: Earning additional rewards through token staking
+- **Community Participation**: Incentives for community contribution
+
+## 🧩 Core Components
+
+### 1. User Authentication
+
+Solearn uses Solana wallet-based authentication with JWT tokens:
+
+```typescript
+// Implementation of wallet authentication
+import { useWallet } from '@solana/wallet-adapter-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+
+// In component
+const { publicKey, signMessage, connected } = useWallet();
+
+// Request signature for authentication
+const message = `Login to Solearn: ${Date.now()}`;
+const signature = await signMessage(new TextEncoder().encode(message));
+
+// Verify on backend and receive JWT token
+const response = await fetch('/api/auth/login', {
+  method: 'POST',
+  body: JSON.stringify({ 
+    publicKey: publicKey.toString(),
+    message,
+    signature: bs58.encode(signature)
+  })
+});
+```
+
+### 2. Token Reward System
+
+The token reward system is implemented using Solana's SPL token standard:
+
+```rust
+// Token distribution program
+#[program]
+pub mod learn_token {
+    use super::*;
+
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        // Initialize token mint and distribution parameters
+        Ok(())
+    }
+
+    pub fn reward_user(
+        ctx: Context<RewardUser>, 
+        amount: u64,
+        achievement_id: String
+    ) -> Result<()> {
+        // Verify achievement completion
+        let user = &ctx.accounts.user;
+        let achievement = &ctx.accounts.achievement;
+        
+        // Validate completion requirements
+        require!(
+            achievement.is_completed_by(user.key()),
+            LearnTokenError::AchievementNotCompleted
+        );
+        
+        // Transfer tokens to user
+        token::transfer(
+            ctx.accounts.transfer_context(),
+            amount
+        )?;
+        
+        // Record distribution in ledger
+        ctx.accounts.distribution_record.record(
+            user.key(),
+            achievement_id,
+            amount,
+            Clock::get()?.slot
+        )?;
+        
+        Ok(())
+    }
+}
+```
+
+### 3. NFT Achievement System
+
+The achievement system uses Metaplex NFTs to certify learning accomplishments:
+
+```rust
+#[program]
+pub mod achievements {
+    use super::*;
+
+    pub fn mint_achievement(
+        ctx: Context<MintAchievement>,
+        metadata_uri: String,
+        achievement_type: String,
+    ) -> Result<()> {
+        // Create metadata for the achievement NFT
+        let metadata = &mut ctx.accounts.metadata;
+        
+        // Set certificate metadata
+        metadata.name = format!("Solearn: {}", achievement_type);
+        metadata.symbol = "LEARN-CERT".to_string();
+        metadata.uri = metadata_uri;
+        
+        // Mint the NFT to the user
+        token::mint_to(
+            ctx.accounts.mint_to_context(),
+            1
+        )?;
+        
+        // Record the achievement
+        ctx.accounts.achievement_record.record(
+            ctx.accounts.user.key(),
+            achievement_type,
+            Clock::get()?.slot
+        )?;
+        
+        Ok(())
+    }
+}
+```
+
+### 4. Learning Progress Tracking
+
+Progress tracking combines database storage with blockchain verification:
+
+```typescript
+// Backend progress tracking service
+async function updateProgress(userId: string, courseId: string, lessonId: string, completed: boolean) {
+  // Update progress in database
+  await Progress.findOneAndUpdate(
+    { userId, courseId },
+    { 
+      $set: { [`lessons.${lessonId}.completed`]: completed },
+      $inc: { completedLessons: completed ? 1 : -1 }
+    },
+    { upsert: true }
+  );
+  
+  // Check if course is completed
+  const progress = await Progress.findOne({ userId, courseId });
+  const course = await Course.findById(courseId);
+  
+  if (progress.completedLessons === course.totalLessons) {
+    // Trigger achievement verification
+    await verifyCompletion(userId, courseId);
+  }
+}
+
+// On-chain verification
+async function verifyCompletion(userId: string, courseId: string) {
+  const user = await User.findById(userId);
+  const wallet = new PublicKey(user.walletAddress);
+  
+  // Call smart contract to verify completion and issue rewards
+  const transaction = new Transaction().add(
+    await program.methods.verifyCourseCompletion(courseId)
+      .accounts({
+        user: wallet,
+        course: coursePDA,
+        rewardMint: rewardTokenMint,
+        userTokenAccount: userTokenAccount,
+        // ...other accounts
+      })
+      .instruction()
+  );
+  
+  // Send transaction to network
+  const signature = await sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [adminKeypair]
+  );
+  
+  // Record completion in database
+  await Completion.create({
+    userId,
+    courseId,
+    transactionSignature: signature,
+    completedAt: new Date(),
+  });
+}
+```
+
+## 📅 Roadmap and Development Status
+
+### Phase 1: Foundation (Completed)
+- ✅ Platform architecture design
+- ✅ Smart contract development for token and NFT systems
+- ✅ User authentication and wallet integration
+- ✅ Core frontend and backend infrastructure
+
+### Phase 2: Core Features (Current)
+- ✅ Course creation and learning system
+- ✅ Progress tracking and achievement system
+- ✅ Token reward distribution mechanism
+- 🔄 Community discussion and engagement features
+- 🔄 Mobile-responsive design optimization
+
+### Phase 3: Expansion (Upcoming)
+- ⏳ Creator portal for community content creation
+- ⏳ Governance system implementation
+- ⏳ Advanced learning analytics
+- ⏳ Learning guilds and team challenges
+- ⏳ Enhanced gamification elements
+
+### Phase 4: Ecosystem Growth (Future)
+- ⏳ Multi-chain support
+- ⏳ Partnership integrations
+- ⏳ Advanced AI-powered learning recommendations
+- ⏳ Decentralized storage for all course content
+- ⏳ Enterprise solutions for Web3 workforce training
+
+## 📂 Project Structure
 
 ```
 SoLearn/
@@ -128,221 +501,28 @@ SoLearn/
 │   └── tests/              # SDK tests
 │
 ├── shared/                 # Shared utilities and types
-│   ├── types/              # Shared TypeScript types
-│   └── utils/              # Shared utilities
-│
 ├── docs/                   # Documentation
 ├── scripts/                # Deployment and test scripts
 └── assets/                 # Project assets
-    └── images/             # Images including logo
 ```
 
-## Technical Architecture
+## 🛠️ Development Guide
 
-### System Overview
-
-SoLearn implements a full-stack decentralized application architecture with the following key components:
-
-![SoLearn Architecture](assets/images/architecture.png)
-
-### Key Components
-
-#### Frontend (Next.js)
-- **Server-side rendering** for improved SEO and performance
-- **React Context API** for state management
-- **Wallet adapter integration** for seamless Solana wallet connections
-- **TailwindCSS** for responsive and customizable UI components
-- **TypeScript** for type safety and better developer experience
-
-#### Backend (Express)
-- **RESTful API design** with proper versioning
-- **JWT-based authentication** with wallet signature verification
-- **MongoDB** for flexible data storage
-- **Rate limiting and security middleware** for protection against attacks
-- **Modular architecture** for maintainability and scalability
-
-#### Smart Contracts (Anchor/Solana)
-- **SPL Token implementation** for $LEARN tokens
-- **Metaplex integration** for NFT achievement issuance
-- **On-chain verification** of learning achievements
-- **Governance mechanisms** for platform development
-- **Program Derived Addresses (PDAs)** for secure data storage
-
-### Data Flow
-
-1. **User Authentication Flow**:
-   - User connects wallet through frontend wallet adapter
-   - Backend verifies wallet signature for authentication
-   - JWT token issued for subsequent authenticated requests
-   - User profile created/retrieved from database
-
-2. **Learning Flow**:
-   - User browses and enrolls in courses
-   - Progress tracked in database as user completes lessons
-   - Quiz results validated and stored
-   - Achievement criteria checked upon completion
-
-3. **Reward Distribution Flow**:
-   - Backend triggers reward distribution upon achievement completion
-   - Smart contract verifies achievement criteria on-chain
-   - Tokens transferred to user's wallet
-   - NFT achievement minted and transferred to user
-
-4. **Content Management Flow**:
-   - Content creators submit courses through creator portal
-   - Review process conducted by governance participants
-   - Approved content stored on IPFS/Arweave
-   - Content metadata and references stored on-chain
-
-### Security Considerations
-
-- **Wallet signature verification** for all authenticated actions
-- **Program Derived Addresses (PDAs)** for secure storage of user data
-- **Rate limiting** to prevent abuse
-- **Input validation and sanitization** at all entry points
-- **Multiple environment configurations** for development, testing, and production
-- **Secure API endpoints** with proper authorization checks
-
-### Deployment Architecture
-
-- **Frontend**: Vercel/Netlify for global CDN distribution
-- **Backend**: Containerized deployment on cloud providers
-- **Contracts**: Deployed on Solana mainnet with testnet staging
-- **CI/CD pipeline** for automated testing and deployment
-
-## Core Components Implementation
-
-### Wallet Integration
-
-The wallet integration is implemented using Solana wallet adapter, which provides a unified interface for connecting to various Solana wallets:
-
-```typescript
-// WalletContext.tsx
-import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-
-// Usage in components
-const { publicKey, signMessage, connected } = useWallet();
-```
-
-### Token Rewards System
-
-The token rewards system uses Solana Program Library (SPL) tokens with custom distribution logic:
-
-```rust
-// learn_token/programs/learn_token/src/lib.rs
-#[program]
-pub mod learn_token {
-    use super::*;
-
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        // Initialize token mint and distribution parameters
-        Ok(())
-    }
-
-    pub fn reward_user(ctx: Context<RewardUser>, amount: u64) -> Result<()> {
-        // Verify achievement and distribute tokens
-        Ok(())
-    }
-}
-```
-
-### Achievement NFT System
-
-Achievement NFTs are implemented using Metaplex standards:
-
-```rust
-// achievements/programs/achievements/src/lib.rs
-#[program]
-pub mod achievements {
-    use super::*;
-
-    pub fn mint_achievement(
-        ctx: Context<MintAchievement>,
-        metadata_uri: String,
-        achievement_type: String,
-    ) -> Result<()> {
-        // Create and mint NFT to user
-        Ok(())
-    }
-}
-```
-
-### Course Progress Tracking
-
-Course progress is tracked using a combination of database storage and on-chain verification:
-
-```typescript
-// Backend progress tracking
-async function updateProgress(userId: string, courseId: string, lessonId: string, completed: boolean) {
-  // Update progress in database
-  // If course completed, trigger achievement verification
-}
-
-// On-chain verification
-async function verifyCompletion(wallet: PublicKey, courseId: string) {
-  // Verify course completion on-chain
-  // Trigger token rewards and NFT minting
-}
-```
-
-## Feature Overview
-
-### User Experience
-
-- **Course Browsing**: Explore a rich catalog of blockchain and Web3 courses
-- **Learning Paths**: Customized learning paths based on your skill level and interests
-- **Interactive Quizzes**: Validate your knowledge through practical quizzes
-- **Progress Tracking**: Track your learning progress and achievements in real-time
-- **Token Rewards**: Earn $LEARN tokens by completing learning tasks
-- **NFT Certification**: Obtain unique NFT certificates representing your skills
-
-### Technical Architecture
-
-- **Frontend**: Responsive user interface built with Next.js and TailwindCSS
-- **Backend**: Express-based API service handling user authentication and course management
-- **Blockchain**: Solana smart contracts managing token rewards and achievement NFTs
-- **Storage**: Course content stored on IPFS/Arweave, ensuring persistence and decentralization
-- **Authentication**: Wallet-based authentication supporting multiple Solana wallets
-
-## Development Guide
-
-### Frontend Development
-
-The frontend is built using the Next.js framework and TailwindCSS.
+### Frontend Development (Next.js)
 
 ```bash
 cd apps/web
 yarn dev
 ```
 
-Main files and directories:
-- `pages/`: Application routes and pages
-- `components/`: Reusable UI components
-- `contexts/`: React Context for state management
-- `hooks/`: Custom React Hooks
-- `styles/`: Global styles and TailwindCSS configuration
-- `public/`: Static assets
-
-### Backend Development
-
-The backend API is built using Express.
+### Backend Development (Express)
 
 ```bash
 cd apps/api
 yarn dev
 ```
 
-Main files and directories:
-- `src/routes/`: API route definitions
-- `src/controllers/`: Request handling logic
-- `src/models/`: Data models
-- `src/middleware/`: Middleware functions
-- `src/services/`: Business logic
-
-### Contract Development
-
-Smart contracts are developed using the Anchor framework.
+### Smart Contract Development (Anchor)
 
 ```bash
 cd contracts/learn-token
@@ -350,9 +530,9 @@ anchor build
 anchor test
 ```
 
-## Contribution Guidelines
+## 🤝 Contributing
 
-We welcome community contributions! If you want to participate in SoLearn development, please follow these steps:
+We welcome community contributions! Please follow these steps:
 
 1. Fork the project
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -362,26 +542,16 @@ We welcome community contributions! If you want to participate in SoLearn develo
 
 Please ensure your code complies with our coding standards and includes appropriate tests.
 
-## Roadmap
+## 📜 License
 
-### Short-term Goals (1-3 months)
-- Refine course creation and playback functionality
-- Optimize user experience and mobile adaptation
-- Improve wallet integration and token reward mechanisms
-- Release public beta version
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Medium-term Goals (3-6 months)
-- Launch creator portal allowing content creators to publish courses
-- Implement community governance features
-- Expand course categories and learning paths
-- Establish partnerships to grow the ecosystem
+## 📞 Contact
 
-### Long-term Goals (6-12 months)
-- Implement fully decentralized storage
-- Launch multi-chain support
-- Establish complete token economic model
-- Expand to other educational domains
+- Website: [solearn.co](https://www.solearn.co/)
+- GitHub: [github.com/solearn-tech/SoLearn](https://github.com/solearn-tech/SoLearn)
+- Twitter: [@SOLEARN2314](https://x.com/SOLEARN2314)
 
-## License
+---
 
-MIT 
+Built with ❤️ by the Solearn Team

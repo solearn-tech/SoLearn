@@ -104,7 +104,7 @@ const DashboardPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Head>
-        <title>Dashboard | SoLearn</title>
+        <title>Dashboard | Solearn</title>
         <meta name="description" content="Track your learning progress and achievements" />
       </Head>
 
@@ -112,7 +112,7 @@ const DashboardPage = () => {
         {/* Welcome section */}
         <div className="bg-gradient-to-r from-primary-600 to-primary-800 rounded-xl shadow-lg p-6 mb-8 text-white">
           <h1 className="text-2xl font-bold mb-2">
-            Welcome {walletAddress ? `${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}` : 'to SoLearn'}
+            Welcome {walletAddress ? `${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}` : 'to Solearn'}
           </h1>
           <p className="mb-4">Track your learning progress, achievements, and rewards</p>
           

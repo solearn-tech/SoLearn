@@ -62,7 +62,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link href="/" legacyBehavior>
             <a className="flex items-center">
-              <span className="text-xl font-bold text-primary-600 dark:text-primary-400">SoLearn</span>
+              <span className="text-xl font-bold text-primary-600 dark:text-primary-400">Solearn</span>
             </a>
           </Link>
 

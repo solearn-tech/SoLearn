@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="md:col-span-1">
             <Link href="/" legacyBehavior>
               <a className="flex items-center">
-                <span className="text-xl font-bold text-primary-600 dark:text-primary-400">SoLearn</span>
+                <span className="text-xl font-bold text-primary-600 dark:text-primary-400">Solearn</span>
               </a>
             </Link>
             <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm">
@@ -19,11 +19,11 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4 mt-4">
               <a 
-                href="#" 
+                href="https://x.com/SOLEARN2314" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
-                title="Twitter coming soon"
+                title="Twitter"
               >
                 <FiTwitter size={20} />
               </a>
@@ -36,7 +36,7 @@ const Footer = () => {
                 <FiGithub size={20} />
               </a>
               <a 
-                href="https://solearn.co" 
+                href="https://www.solearn.co/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
@@ -154,7 +154,7 @@ const Footer = () => {
 
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
           <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
-            &copy; {new Date().getFullYear()} SoLearn. All rights reserved.
+            &copy; {new Date().getFullYear()} Solearn. All rights reserved.
           </p>
         </div>
       </div>
