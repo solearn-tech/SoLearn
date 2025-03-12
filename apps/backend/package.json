@@ -10,9 +10,11 @@
     "clean": "rm -rf dist node_modules"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.75.0",
+    "@solana/web3.js": "^1.98.0",
+    "@types/nodemailer": "^6.4.17",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
+    "bs58": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
@@ -20,7 +22,9 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.3.0",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.10.0",
     "redis": "^4.6.7",
+    "tweetnacl": "^1.0.3",
     "winston": "^3.9.0"
   },
   "devDependencies": {
@@ -29,7 +33,7 @@
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/morgan": "^1.9.4",
-    "@types/node": "^20.3.1",
+    "@types/node": "^20.17.24",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
     "eslint": "^8.42.0",
@@ -37,4 +41,4 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.1.3"
   }
-} 
+}

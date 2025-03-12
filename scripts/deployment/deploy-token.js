@@ -4,6 +4,11 @@ const { Connection, Keypair, PublicKey, clusterApiUrl, sendAndConfirmTransaction
 const { readFileSync, writeFileSync } = require('fs');
 const readline = require('readline');
 const path = require('path');
+const anchor = require('@project-serum/anchor');
+const spl = require('@solana/spl-token');
+
+// Metaplex token metadata program ID
+const TOKEN_METADATA_PROGRAM_ID = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
 
 // Setup readline interface for user input
 const rl = readline.createInterface({
@@ -13,6 +18,20 @@ const rl = readline.createInterface({
 
 // Prompt configuration
 const prompt = (query) => new Promise((resolve) => rl.question(query, resolve));
+
+// Helper function to derive metadata account address
+async function getMetadataAddress(mint) {
+  return (
+    await PublicKey.findProgramAddress(
+      [
+        Buffer.from('metadata'),
+        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+        mint.toBuffer(),
+      ],
+      TOKEN_METADATA_PROGRAM_ID
+    )
+  )[0];
+}
 
 // Program
 async function main() {
@@ -112,21 +131,144 @@ async function main() {
       throw new Error('Deployment cancelled');
     }
     
-    // Step 5: Token deployment (placeholder)
+    // Step 5: Token deployment
     console.log('\n🚀 Step 5: Deploying token...');
-    console.log('This step would call the Solana program to create the token...');
     
-    // TODO: Implement actual token deployment using the Anchor framework
-    // This would involve compiling the program, deploying it to the network,
-    // and initializing the token with the specified parameters
+    try {
+      // Load Anchor workspace
+      const provider = anchor.AnchorProvider.env();
+      anchor.setProvider(provider);
+      
+      // Get the token program from the workspace
+      const tokenProgram = anchor.workspace.SolearnToken;
+      
+      // Generate a new keypair for the token mint
+      const mintKeypair = anchor.web3.Keypair.generate();
+      console.log(`Generated mint keypair: ${mintKeypair.publicKey.toString()}`);
+      
+      // Create token mint account
+      const decimals = tokenDecimals;
+      const mintRent = await provider.connection.getMinimumBalanceForRentExemption(
+        spl.MintLayout.span
+      );
+      
+      console.log(`Creating token mint account...`);
+      const createMintAccountIx = anchor.web3.SystemProgram.createAccount({
+        fromPubkey: provider.wallet.publicKey,
+        newAccountPubkey: mintKeypair.publicKey,
+        lamports: mintRent,
+        space: spl.MintLayout.span,
+        programId: spl.TOKEN_PROGRAM_ID,
+      });
+      
+      // Initialize mint instruction
+      const initMintIx = spl.createInitializeMintInstruction(
+        mintKeypair.publicKey,
+        decimals,
+        provider.wallet.publicKey,
+        provider.wallet.publicKey,
+        spl.TOKEN_PROGRAM_ID
+      );
+      
+      // Create token metadata
+      const metadataAddress = await getMetadataAddress(mintKeypair.publicKey);
+      
+      const createMetadataIx = await tokenProgram.methods
+        .createMetadata(
+          tokenName,
+          tokenSymbol,
+          tokenConfig.uri,
+        )
+        .accounts({
+          metadata: metadataAddress,
+          mint: mintKeypair.publicKey,
+          mintAuthority: provider.wallet.publicKey,
+          payer: provider.wallet.publicKey,
+          updateAuthority: provider.wallet.publicKey,
+          systemProgram: anchor.web3.SystemProgram.programId,
+          tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .instruction();
+      
+      // Send transaction with all instructions
+      const tx = new anchor.web3.Transaction();
+      tx.add(createMintAccountIx, initMintIx, createMetadataIx);
+      
+      const txSignature = await provider.sendAndConfirm(tx, [mintKeypair]);
+      
+      console.log(`\n✅ Token deployment successful!`);
+      console.log(`Transaction signature: ${txSignature}`);
+      console.log(`Token contract address: ${tokenProgram.programId.toString()}`);
+      console.log(`Token mint address: ${mintKeypair.publicKey.toString()}`);
+      
+      // Create initial supply if specified
+      if (tokenSupply > 0) {
+        console.log(`\nMinting initial supply of ${tokenSupply} tokens...`);
+        
+        // Create a token account for the deployer
+        const deployerTokenAccount = await spl.getAssociatedTokenAddress(
+          mintKeypair.publicKey,
+          provider.wallet.publicKey
+        );
+        
+        // Check if the account exists, if not create it
+        const tokenAccountInfo = await provider.connection.getAccountInfo(deployerTokenAccount);
+        
+        let createAtaIx;
+        if (!tokenAccountInfo) {
+          createAtaIx = spl.createAssociatedTokenAccountInstruction(
+            provider.wallet.publicKey,
+            deployerTokenAccount,
+            provider.wallet.publicKey,
+            mintKeypair.publicKey,
+            spl.TOKEN_PROGRAM_ID,
+            spl.ASSOCIATED_TOKEN_PROGRAM_ID
+          );
+        }
+        
+        // Create mint instruction
+        const mintToIx = spl.createMintToInstruction(
+          mintKeypair.publicKey,
+          deployerTokenAccount,
+          provider.wallet.publicKey,
+          tokenSupply * (10 ** decimals)
+        );
+        
+        // Send transaction
+        const mintTx = new anchor.web3.Transaction();
+        if (createAtaIx) {
+          mintTx.add(createAtaIx);
+        }
+        mintTx.add(mintToIx);
+        
+        const mintTxSignature = await provider.sendAndConfirm(mintTx, []);
+        console.log(`Initial supply minted successfully!`);
+        console.log(`Transaction signature: ${mintTxSignature}`);
+      }
+    } catch (error) {
+      console.error(`Error deploying token:`, error);
+      throw error;
+    }
     
-    // For now, we'll just simulate success
-    console.log(`\n✅ Token deployment successful!`);
-    console.log(`Token contract address: [PLACEHOLDER]`);
-    console.log(`Token mint address: [PLACEHOLDER]`);
-    
-    // Step 6: Verification (placeholder)
+    // Step 6: Verification
     console.log('\n🔍 Step 6: Verifying deployment...');
+    
+    try {
+      // Verify the token exists on-chain
+      const connection = new anchor.web3.Connection(networkConfig.rpcUrl);
+      const mintInfo = await connection.getParsedAccountInfo(mintKeypair.publicKey);
+      
+      if (mintInfo && mintInfo.value) {
+        console.log(`Token verified on-chain!`);
+        console.log(`Token mint info:`, JSON.stringify(mintInfo.value.data.parsed, null, 2));
+      } else {
+        console.error(`Token verification failed: Could not find token mint on-chain`);
+      }
+    } catch (error) {
+      console.error(`Error verifying token:`, error);
+    }
+    
     console.log('Verification complete!');
     
     // Step 7: Next steps

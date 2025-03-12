@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Mint, Token, TokenAccount};
+use anchor_spl::token::{self, Mint, Token, TokenAccount, MintTo};
 use solana_program::program::invoke_signed;
 use std::convert::TryFrom;
 
@@ -157,8 +157,35 @@ pub mod solearn_learning {
             xp_earned
         );
 
-        // TODO: Call the token program to mint reward tokens to the learner
-        // This would be implemented as a CPI call to the solearn-token program
+        // Call the token program to mint reward tokens to the learner
+        // Transfer tokens from the program's token account to the learner's wallet
+        let token_program = ctx.accounts.program_state.token_program;
+        let token_mint = ctx.accounts.program_state.token_mint;
+        
+        // Create the token accounts if they don't exist
+        let seeds = &[
+            b"program_authority",
+            &[ctx.bumps.program_state],
+        ];
+        let signer = &[&seeds[..]];
+        
+        // Mint tokens to the learner's wallet
+        let cpi_accounts = MintTo {
+            mint: ctx.accounts.token_mint.to_account_info(),
+            to: ctx.accounts.learner_token_account.to_account_info(),
+            authority: ctx.accounts.program_state.to_account_info(),
+        };
+        
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
+        
+        token::mint_to(cpi_ctx, course.reward_amount)?;
+        
+        msg!(
+            "Minted {} tokens to learner {}",
+            course.reward_amount,
+            learner.wallet
+        );
         
         Ok(())
     }
@@ -326,6 +353,25 @@ pub struct CompleteCourse<'info> {
     
     #[account(mut)]
     pub wallet: Signer<'info>,
+    
+    // Token program accounts
+    #[account(
+        mut,
+        address = program_state.token_mint,
+    )]
+    pub token_mint: Account<'info, Mint>,
+    
+    #[account(
+        mut,
+        constraint = learner_token_account.owner == wallet.key(),
+        constraint = learner_token_account.mint == token_mint.key(),
+    )]
+    pub learner_token_account: Account<'info, TokenAccount>,
+    
+    #[account(
+        address = program_state.token_program,
+    )]
+    pub token_program: Program<'info, Token>,
     
     pub system_program: Program<'info, System>,
 }
