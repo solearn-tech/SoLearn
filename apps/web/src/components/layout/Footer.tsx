@@ -18,11 +18,11 @@ const Footer = () => {
               Learn to Earn on Solana - A decentralized learning platform that rewards you for acquiring blockchain knowledge.
             </p>
             <div className="flex space-x-4 mt-4">
-              <a 
-                href="https://x.com/SOLEARN2314" 
-                target="_blank" 
+              <a
+                className="text-gray-400 hover:text-primary-500 transition-colors duration-300"
+                href="https://x.com/SOLEARN_AI_"
+                target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
                 title="Twitter"
               >
                 <FiTwitter size={20} />

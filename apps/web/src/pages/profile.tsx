@@ -33,8 +33,8 @@ const mockUserData: UserData = {
   avatar: '/images/avatars/default.jpg',
   socialLinks: {
     website: 'https://example.com',
-    twitter: 'https://twitter.com/example',
-    github: 'https://github.com/example',
+    twitter: 'https://twitter.com/SOLEARN_AI_',
+    github: 'https://github.com/johndoe',
   },
   preferences: {
     emailNotifications: true,

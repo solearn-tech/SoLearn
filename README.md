@@ -5,7 +5,7 @@
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
   [![Website](https://img.shields.io/badge/Website-solearn.co-blue)](https://www.solearn.co/)
-  [![Twitter](https://img.shields.io/badge/Twitter-@SOLEARN2314-blue)](https://x.com/SOLEARN2314)
+  [![Twitter](https://img.shields.io/badge/Twitter-@SOLEARN_AI_-blue)](https://x.com/SOLEARN_AI_)
 </div>
 
 ## 🔑 Overview
@@ -536,8 +536,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact
 
 - Website: [solearn.co](https://www.solearn.co/)
-- GitHub: [github.com/solearn-tech/SoLearn](https://github.com/solearn-tech/SoLearn)
-- Twitter: [@SOLEARN2314](https://x.com/SOLEARN2314)
+- GitHub: [github.com/solearn-tech](https://github.com/solearn-tech)
+- Twitter: [@SOLEARN_AI_](https://x.com/SOLEARN_AI_)
+- Email: contact@solearn.co
 
 ---
 
